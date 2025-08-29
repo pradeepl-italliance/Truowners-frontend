@@ -138,7 +138,9 @@ const OwnerSignUp = ({ onClose, onSwitchToLogin }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
+          firstName: formData.firstname,
+          lastName: formData.lastname,
+          phone:formData.phone,
           email: formData.email,
           password: formData.password,
           role: formData.role,

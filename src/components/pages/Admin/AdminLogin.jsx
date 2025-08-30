@@ -14,6 +14,7 @@ const AdminLogin = ({ onClose }) => {
   const [error, setError] = useState('')
   const [attemptCount, setAttemptCount] = useState(0)
   const { login } = useAdminAuth()
+  console.log("test");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target

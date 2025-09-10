@@ -1,6 +1,6 @@
 /* PropertyCard.css */
 .property-card {
-  height: 100%;
+  height: 450px; /* ✅ fixed height */
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -10,8 +10,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background: #ffffff;
   border: 1px solid #e0e0e0;
-  width:100%;
-  max-width: 325px;
+  width: 100%;
+  max-width: 325px; /* ✅ fixed width */
+  text-align: left; /* ✅ left align everything */
 }
 
 .property-card:hover {
@@ -28,8 +29,7 @@
 
 .property-card__image {
   width: 100%;
-  /* height: 100%; */
-    height: 200px;
+  height: 200px;
   object-fit: cover;
 }
 
@@ -90,18 +90,23 @@
 .property-card__content {
   flex-grow: 1;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left; /* ✅ ensure left alignment */
 }
 
 .property-card__title {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
-  /* margin: 0 0 12px 0; */
+  margin: 0 0 8px 0;
   color: #333;
   display: -webkit-box;
-  --webkit-line-clamp: 2;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* ✅ correct clamp */
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Location */
@@ -111,23 +116,25 @@
   gap: 4px;
   margin-bottom: 5px;
   color: #666;
+  text-align: left;
 }
 
 .property-card__location span {
   font-size: 14px;
   display: -webkit-box;
-  --webkit-line-clamp: 1;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Specifications */
- .property-card__specs {
+.property-card__specs {
   display: flex;
-  flex-direction: row; /* Force horizontal layout */
-  justify-content: space-between; /* Even spacing */
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px; /* Space between items */
+  gap: 10px;
   margin-bottom: 5px;
 }
 
@@ -170,28 +177,30 @@
 .property-card__amenities {
   font-size: 12px;
   color: #666;
-  margin-bottom: 12px;
-}
-
-.property-card__amenities strong {
-  color: #2F80ED;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Description */
 .property-card__description {
   font-size: 12px;
   color: #666;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: -webkit-box;
-  --webkit-line-clamp: 2;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* ✅ clamp to 2 lines */
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Pricing */
 .property-card__pricing {
   border-radius: 8px;
-  margin-top: 8px;
+  margin-top: auto;
 }
 
 .property-card__rent {
@@ -217,17 +226,17 @@
   color: #666;
 }
 
-/* ✅ Actions (Updated) */
+/* Actions */
 .property-card__actions {
-  margin-top: auto; /* stick to bottom */
+  margin-top: auto;
   width: 100%;
 }
 
 .property-card__action-btn {
-  width: 100%; /* full width */
+  width: 100%;
   padding: 10px;
   border: none;
-  border-radius: 0; /* align with card edges */
+  border-radius: 0;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -254,7 +263,7 @@
   background-color: #f0f7ff;
 }
 
-.property-overlay{
+.property-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -265,22 +274,46 @@
   height: 200px;
 }
 
+/* ✅ New styles for Read More + Modal */
+.property-card__readmore {
+  border: none;
+  background: none;
+  color: #2F80ED;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 4px;
+  text-decoration: underline;
+}
+
+.property-card__readmore:hover {
+  color: #1e6cc7;
+}
+
+.property-card__close-btn {
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: none;
+  background: #2F80ED;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.property-card__close-btn:hover {
+  background: #1e6cc7;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  .property-card {
+    height: auto; /* let it grow on small screens */
+  }
   .property-card__content {
     padding: 12px;
   }
-  
   .property-card__title {
     font-size: 16px;
-  }
-  
-  .property-card__pricing {
-    padding: 8px;
-  }
-  
-  .property-card__actions {
-    padding: 0;
   }
 }
 
@@ -288,23 +321,10 @@
   .property-card__specs {
     grid-template-columns: 1fr 1fr;
   }
-  
   .property-card__spec {
     padding: 3px 6px;
   }
-  
   .property-card__spec span {
     font-size: 11px;
   }
-}
-
-/* ✅ Ensure content + actions layout */
-.property-card__content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.property-card__content-inner {
-  flex: 1;
 }

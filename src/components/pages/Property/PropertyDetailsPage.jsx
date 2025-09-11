@@ -81,7 +81,7 @@ const PropertyDetailsPage = () => {
   const [isEditMode, setIsEditMode] = useState(false)
   const [editingBookingId, setEditingBookingId] = useState(null)
   const [shareOpen, setShareOpen] = useState(false);
-const shareUrl = "https://truowners.com/property-details"; // ✅ later replace with dynamic property link
+  const shareUrl = `https://truowners.com/property-details/${id}`;; // ✅ later replace with dynamic property link
 
 const handleCopy = () => {
   navigator.clipboard.writeText(shareUrl);
@@ -1300,26 +1300,48 @@ const handleCopy = () => {
 
     {/* Social Media Icons */}
     <Box sx={{ display: "flex", justifyContent: "space-around", mb: 3 }}>
-      <Box textAlign="center">
-        <WhatsAppIcon color="primary" fontSize="large" />
-        <Typography variant="caption">WhatsApp</Typography>
-      </Box>
-      <Box textAlign="center">
-        <EmailIcon color="primary" fontSize="large" />
-        <Typography variant="caption">Email</Typography>
-      </Box>
-      <Box textAlign="center">
-        <FacebookIcon color="primary" fontSize="large" />
-        <Typography variant="caption">Facebook</Typography>
-      </Box>
-      <Box textAlign="center">
-        <ClearIcon color="primary" fontSize="large" />
-        <Typography variant="caption">X</Typography>
-      </Box>
-      <Box textAlign="center">
-        <TelegramIcon color="primary" fontSize="large" />
-        <Typography variant="caption">Telegram</Typography>
-      </Box>
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://wa.me/?text=${shareUrl}`, "_blank")}
+  >
+    <WhatsAppIcon sx={{ fontSize: 36, color: "#25D366" }} />
+    <Typography variant="caption" display="block">
+      WhatsApp
+    </Typography>
+  </Box>
+      
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`mailto:?subject=Check this property&body=${shareUrl}`)}
+  >
+    <EmailIcon sx={{ fontSize: 36, color: "#0072c6" }} />
+    <Typography variant="caption" display="block">
+      Email
+    </Typography>
+  </Box>
+      
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, "_blank")}
+  >
+    <FacebookIcon sx={{ fontSize: 36, color: "#1877F2" }} />
+    <Typography variant="caption" display="block">
+      Facebook
+    </Typography>
+  </Box>
+       <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://t.me/share/url?url=${shareUrl}`, "_blank")}
+  >
+    <TelegramIcon sx={{ fontSize: 36, color: "#0088cc" }} />
+    <Typography variant="caption" display="block">
+      Telegram
+    </Typography>
+  </Box>
     </Box>
 
     {/* Copy Link */}

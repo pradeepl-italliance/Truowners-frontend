@@ -1,6 +1,7 @@
 /* PropertyCard.css */
 .property-card {
-  height: 450px; /* ✅ fixed height */
+  height: auto; /* ✅ dynamic height, no extra white gap */
+  min-height: 420px; /* ✅ keeps consistency between cards */
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -12,7 +13,7 @@
   border: 1px solid #e0e0e0;
   width: 100%;
   max-width: 325px; /* ✅ fixed width */
-  text-align: left; /* ✅ left align everything */
+  text-align: left;
 }
 
 .property-card:hover {
@@ -92,18 +93,19 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  text-align: left; /* ✅ ensure left alignment */
+  justify-content: flex-start;
+  text-align: left;
+  gap: 6px;
 }
 
 .property-card__title {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
-  margin: 0 0 8px 0;
+  margin: 0;
   color: #333;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* ✅ correct clamp */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,17 +114,17 @@
 /* Location */
 .property-card__location {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
-  margin-bottom: 5px;
   color: #666;
   text-align: left;
+  margin: 0;
 }
 
 .property-card__location span {
   font-size: 14px;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -135,7 +137,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-bottom: 5px;
+  margin: 0;
 }
 
 .property-card__spec {
@@ -177,7 +179,7 @@
 .property-card__amenities {
   font-size: 12px;
   color: #666;
-  margin-bottom: 8px;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -189,9 +191,9 @@
 .property-card__description {
   font-size: 12px;
   color: #666;
-  margin-bottom: 8px;
+  margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* ✅ clamp to 2 lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -199,14 +201,13 @@
 
 /* Pricing */
 .property-card__pricing {
-  border-radius: 8px;
-  margin-top: auto;
+  margin: 2px 0; /* ✅ tightened */
 }
 
 .property-card__rent {
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .property-card__price {
@@ -228,13 +229,14 @@
 
 /* Actions */
 .property-card__actions {
-  margin-top: auto;
+  margin-top: auto; /* ✅ ensures button sticks at bottom */
+  padding: 8px 0; /* ✅ equal space above/below button */
   width: 100%;
 }
 
 .property-card__action-btn {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   border: none;
   border-radius: 0;
   font-weight: 600;
@@ -274,43 +276,14 @@
   height: 200px;
 }
 
-/* ✅ New styles for Read More + Modal */
-.property-card__readmore {
-  border: none;
-  background: none;
-  color: #2F80ED;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 4px;
-  text-decoration: underline;
-}
-
-.property-card__readmore:hover {
-  color: #1e6cc7;
-}
-
-.property-card__close-btn {
-  margin-top: 16px;
-  padding: 8px 16px;
-  border: none;
-  background: #2F80ED;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.property-card__close-btn:hover {
-  background: #1e6cc7;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .property-card {
-    height: auto; /* let it grow on small screens */
+    min-height: auto;
   }
   .property-card__content {
     padding: 12px;
+    gap: 8px;
   }
   .property-card__title {
     font-size: 16px;

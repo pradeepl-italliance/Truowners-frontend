@@ -808,55 +808,61 @@ const PropertyDetailsPage = () => {
             </div>
           )}
 
-          {/* Image Gallery */}
-          {safeImages.length > 0 && (
-            <div className="image-gallery">
-              <div className="main-image">
-                <img
-                  src={safeImages[currentImageIndex]}
-                  alt={`${property.title} - Image ${currentImageIndex + 1}`}
-                  onError={(e) => {
-                    e.target.src = '/placeholder-property.jpg'
-                  }}
-                />
+          <div className="main-image">
+  <div className="property-image-wrapper">
+    <img
+      src={safeImages[currentImageIndex]}
+      alt={`${property.title} - Image ${currentImageIndex + 1}`}
+      className="property-image"
+      onError={(e) => { e.target.src = '/placeholder-property.jpg' }}
+    />
 
-                {safeImages.length > 1 && (
-                  <>
-                    <button
-                      className="image-nav prev"
-                      onClick={() => setCurrentImageIndex(prev =>
-                        prev === 0 ? safeImages.length - 1 : prev - 1
-                      )}
-                    >
-                      ‹
-                    </button>
-                    <button
-                      className="image-nav next"
-                      onClick={() => setCurrentImageIndex(prev =>
-                        prev === safeImages.length - 1 ? 0 : prev + 1
-                      )}
-                    >
-                      ›
-                    </button>
-                  </>
-                )}
-              </div>
+    {/* Wishlist Icon */}
+    <button
+      className="wishlist-icon"
+      onClick={() => toggleWishlist(property.id)}
+    >
+      {isInWishlist(property.id) ? (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
+                   4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+                   14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 
+                   6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="red" viewBox="0 0 24 24" width="24" height="24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
+                   4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+                   14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 
+                   6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      )}
+    </button>
+  </div>
 
-              {safeImages.length > 1 && (
-                <div className="image-thumbnails">
-                  {safeImages.map((image, index) => (
-                    <button
-                      key={index}
-                      className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
-                      onClick={() => setCurrentImageIndex(index)}
-                    >
-                      <img src={image} alt={`Thumbnail ${index + 1}`} />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+  {safeImages.length > 1 && (
+    <>
+      <button
+        className="image-nav prev"
+        onClick={() => setCurrentImageIndex(prev =>
+          prev === 0 ? safeImages.length - 1 : prev - 1
+        )}
+      >
+        ‹
+      </button>
+      <button
+        className="image-nav next"
+        onClick={() => setCurrentImageIndex(prev =>
+          prev === safeImages.length - 1 ? 0 : prev + 1
+        )}
+      >
+        ›
+      </button>
+    </>
+  )}
+</div>
+
 
           {/* Property Content */}
           <div className="property-content">

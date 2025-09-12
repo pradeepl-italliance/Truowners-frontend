@@ -5,7 +5,9 @@ import { buildApiUrl, API_CONFIG } from '../../../config/api'
 import { handleApiError, getErrorMessage, validateApiResponse } from '../../../utils/errorHandler'
 import './PropertyDetailsPage.css'
 
+
 // MUI imports
+
 import {
   Button,
   Dialog,
@@ -20,8 +22,22 @@ import {
   CircularProgress,
   Chip,
   Divider,
-  Grid
-} from '@mui/material'
+  Grid,
+   IconButton
+} 
+from '@mui/material'
+
+
+import ShareIcon from "@mui/icons-material/Share";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import EmailIcon from "@mui/icons-material/Email";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import CloseIcon from "@mui/icons-material/Close";
+
+// Temporary placeholder for "X" (Twitter) – later we can replace with correct SVG
+import ClearIcon from "@mui/icons-material/Clear";
+
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -38,6 +54,9 @@ import bed from '../../../assets/images/Bed.png';
 import bath from '../../../assets/images/Bath.png';
 import areaImg from '../../../assets/images/area.png';
 import trueOwnersLogo from "../../../assets/images/truownerslogo.png"
+import { Favorite, FavoriteOutlined } from '@mui/icons-material'
+import { styled } from "@mui/material/styles";
+
 
 const PropertyDetailsPage = () => {
   const { id } = useParams()
@@ -61,6 +80,14 @@ const PropertyDetailsPage = () => {
   const [bookingSuccess, setBookingSuccess] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [editingBookingId, setEditingBookingId] = useState(null)
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareUrl = `https://truowners.com/property-details/${id}`;; // ✅ later replace with dynamic property link
+
+const handleCopy = () => {
+  navigator.clipboard.writeText(shareUrl);
+  alert("Link copied!");
+};
+
 
   // New booking info state
   const [bookingInfo, setBookingInfo] = useState({
@@ -703,6 +730,22 @@ const PropertyDetailsPage = () => {
   }
 
 
+  const WishlistButton = styled(IconButton)(({ theme, isWishlisted }) => ({
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    color: isWishlisted ? "#d32f2f" : "#666",
+    zIndex: 1,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      color: "#d32f2f",
+      transform: "scale(1.1)",
+    },
+  }));
+
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -735,7 +778,7 @@ const PropertyDetailsPage = () => {
             </div>
 
             {/* WISHLIST BUTTON - Only show for users or non-authenticated */}
-            <div className="property-actions">
+            {/* <div className="property-actions">
               {(user?.role === 'user' || !isAuthenticated) && (
                 <button
                   className={`wishlist-btn large ${isInWishlist ? 'active' : ''} ${wishlistLoading ? 'loading' : ''}`}
@@ -763,7 +806,7 @@ const PropertyDetailsPage = () => {
                   )}
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Current User's Bookings Display */}
@@ -808,55 +851,93 @@ const PropertyDetailsPage = () => {
             </div>
           )}
 
-          {/* Image Gallery */}
-          {safeImages.length > 0 && (
-            <div className="image-gallery">
-              <div className="main-image">
-                <img
-                  src={safeImages[currentImageIndex]}
-                  alt={`${property.title} - Image ${currentImageIndex + 1}`}
-                  onError={(e) => {
-                    e.target.src = '/placeholder-property.jpg'
-                  }}
-                />
+          <div className="main-image">
+            <div className="property-image-wrapper">
+              <img
+                src={safeImages[currentImageIndex]}
+                alt={`${property.title} - Image ${currentImageIndex + 1}`}
+                className="property-image"
+                onError={(e) => { e.target.src = '/placeholder-property.jpg' }}
+              />
+              <IconButton
+  onClick={() => setShareOpen(true)}
+  size="small"
+  sx={{
+    position: "absolute",
+    top: 8,
+    right: 110,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    color: "#555",
+    zIndex: 1,
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      transform: "scale(1.1)",
+    },
+  }}
+  title="Share Property"
+>
+  <ShareIcon />
+</IconButton>
 
-                {safeImages.length > 1 && (
-                  <>
-                    <button
-                      className="image-nav prev"
-                      onClick={() => setCurrentImageIndex(prev =>
-                        prev === 0 ? safeImages.length - 1 : prev - 1
-                      )}
-                    >
-                      ‹
-                    </button>
-                    <button
-                      className="image-nav next"
-                      onClick={() => setCurrentImageIndex(prev =>
-                        prev === safeImages.length - 1 ? 0 : prev + 1
-                      )}
-                    >
-                      ›
-                    </button>
-                  </>
+
+
+<IconButton
+  onClick={handleBookVisit}
+  size="small"
+  sx={{
+    position: "absolute",
+    top: 8,
+    right: 60, // adjust 48px so it doesn't overlap wishlist button
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    color: "#2F80ED",
+    zIndex: 1,
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      transform: "scale(1.1)",
+    },
+  }}
+  title="Book a Visit"
+>
+  <CalendarTodayIcon />
+</IconButton>
+
+              {/* Wishlist Icon */}
+
+              <WishlistButton
+                onClick={handleWishlistToggle}
+                disabled={wishlistLoading}
+                size="small"
+              >
+                {isInWishlist ? (
+                  <Favorite sx={{ color: "#d32f2f" }} />
+                ) : (
+                  <FavoriteOutlined />
                 )}
-              </div>
-
-              {safeImages.length > 1 && (
-                <div className="image-thumbnails">
-                  {safeImages.map((image, index) => (
-                    <button
-                      key={index}
-                      className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
-                      onClick={() => setCurrentImageIndex(index)}
-                    >
-                      <img src={image} alt={`Thumbnail ${index + 1}`} />
-                    </button>
-                  ))}
-                </div>
-              )}
+              </WishlistButton>
             </div>
-          )}
+
+            {safeImages.length > 1 && (
+              <>
+                <button
+                  className="image-nav prev"
+                  onClick={() => setCurrentImageIndex(prev =>
+                    prev === 0 ? safeImages.length - 1 : prev - 1
+                  )}
+                >
+                  ‹
+                </button>
+                <button
+                  className="image-nav next"
+                  onClick={() => setCurrentImageIndex(prev =>
+                    prev === safeImages.length - 1 ? 0 : prev + 1
+                  )}
+                >
+                  ›
+                </button>
+              </>
+            )}
+          </div>
+
 
           {/* Property Content */}
           <div className="property-content">
@@ -952,7 +1033,7 @@ const PropertyDetailsPage = () => {
                     </button>
 
                     {/* Book a Visit Button - Only show if user can make new booking */}
-                    {canMakeNewBooking() && (
+                    {/* {canMakeNewBooking() && (
                       <Button
                         variant="contained"
                         color="primary"
@@ -969,7 +1050,7 @@ const PropertyDetailsPage = () => {
                       >
                         📅 Book a Visit
                       </Button>
-                    )}
+                    )} */}
                   </>
                 ) : (
                   <button className="login-btn" onClick={() => navigate('/login')}>
@@ -1202,6 +1283,87 @@ const PropertyDetailsPage = () => {
             </DialogActions>
           )}
         </Dialog>
+        <Dialog open={shareOpen} onClose={() => setShareOpen(false)}>
+  <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Typography variant="h6" color="primary">
+      Share property
+    </Typography>
+    <IconButton onClick={() => setShareOpen(false)}>
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+
+  <DialogContent>
+    <Typography variant="body2" sx={{ mb: 2 }}>
+      Share this property with your friends and family
+    </Typography>
+
+    {/* Social Media Icons */}
+    <Box sx={{ display: "flex", justifyContent: "space-around", mb: 3 }}>
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://wa.me/?text=${shareUrl}`, "_blank")}
+  >
+    <WhatsAppIcon sx={{ fontSize: 36, color: "#25D366" }} />
+    <Typography variant="caption" display="block">
+      WhatsApp
+    </Typography>
+  </Box>
+      
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`mailto:?subject=Check this property&body=${shareUrl}`)}
+  >
+    <EmailIcon sx={{ fontSize: 36, color: "#0072c6" }} />
+    <Typography variant="caption" display="block">
+      Email
+    </Typography>
+  </Box>
+      
+  <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, "_blank")}
+  >
+    <FacebookIcon sx={{ fontSize: 36, color: "#1877F2" }} />
+    <Typography variant="caption" display="block">
+      Facebook
+    </Typography>
+  </Box>
+       <Box
+    textAlign="center"
+    sx={{ cursor: "pointer" }}
+    onClick={() => window.open(`https://t.me/share/url?url=${shareUrl}`, "_blank")}
+  >
+    <TelegramIcon sx={{ fontSize: 36, color: "#0088cc" }} />
+    <Typography variant="caption" display="block">
+      Telegram
+    </Typography>
+  </Box>
+    </Box>
+
+    {/* Copy Link */}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <TextField
+        fullWidth
+        size="small"
+        value={shareUrl}
+        InputProps={{ readOnly: true }}
+      />
+      <Button
+        onClick={handleCopy}
+        variant="contained"
+        color="success"
+        sx={{ ml: 1 }}
+      >
+        Copy
+      </Button>
+    </Box>
+  </DialogContent>
+</Dialog>
+
       </div>
     </LocalizationProvider>
   )

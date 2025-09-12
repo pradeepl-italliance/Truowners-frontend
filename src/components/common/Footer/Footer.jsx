@@ -100,7 +100,7 @@ const Footer = () => {
   >
     <EmailIcon sx={iconStyle} />
     <Typography variant="body1" sx={{ ml: 1, fontSize: "15px" }}>
-      gre71999@gmail.com
+     Truowners@gmail.com
     </Typography>
   </Box>
 

@@ -112,34 +112,73 @@ const MyBookings = () => {
                 sx={{
                   borderRadius: 3,
                   p: 0.5,
-                  background: STATUS_GRADIENTS[status] || '#ddd'
+                  background: STATUS_GRADIENTS[status] || '#ddd',
+                  display: 'flex',
+                  justifyContent: 'center'
                 }}
               >
                 <Card
                   sx={{
+                    width: 400, // ✅ fixed width
+                    height: 250, // ✅ fixed height
                     borderRadius: 2,
-                    height: '100%',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                     overflow: 'hidden',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    p: 2
                   }}
                   onClick={() => navigate(`/property/${property._id}`)}
                 >
-                  <CardContent sx={{ flexGrow: 1, width: '100%' }}>
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
+                      width: '100%',
+                      p: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between'
+                    }}
+                  >
                     {/* Title */}
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: 600,
+                        whiteSpace: 'normal',   // ✅ allow wrapping
+                        wordBreak: 'break-word', // ✅ break long words
+                        overflow: 'hidden'
+                      }}
+                    >
                       {property.title}
                     </Typography>
 
                     {/* Address */}
                     {loc?.address && (
-                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 0.5 }}>
-                        <PlaceIcon sx={{ fontSize: 18, mr: 0.5 }} />
-                        <Typography variant="body2" color="text.secondary" noWrap>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          mt: 0.5,
+                          px: 1
+                        }}
+                      >
+                        <PlaceIcon sx={{ fontSize: 18, mr: 0.5, mt: '2px' }} />
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{
+                            whiteSpace: 'normal',  // ✅ wrap
+                            wordBreak: 'break-word',
+                            overflow: 'hidden',
+                            maxHeight: 60,         // ✅ prevent overflow
+                            textAlign: 'left'
+                          }}
+                        >
                           {loc.address}{loc.city ? `, ${loc.city}` : ''}
                         </Typography>
                       </Box>
@@ -159,7 +198,7 @@ const MyBookings = () => {
                       <Chip icon={<ScheduleIcon />} label={timeSlot} size="small" />
                     </Box>
 
-                    {/* Status Row (opposite side) */}
+                    {/* Status Row */}
                     <Box 
                       sx={{ 
                         display: 'flex', 

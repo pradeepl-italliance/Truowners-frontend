@@ -1,6 +1,7 @@
 /* PropertyCard.css */
 .property-card {
-  height: 100%;
+  height: auto; /* ✅ dynamic height, no extra white gap */
+  min-height: 420px; /* ✅ keeps consistency between cards */
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -10,8 +11,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background: #ffffff;
   border: 1px solid #e0e0e0;
-  width:100%;
-  max-width: 325px;
+  width: 100%;
+  max-width: 325px; /* ✅ fixed width */
+  text-align: left;
 }
 
 .property-card:hover {
@@ -28,8 +30,7 @@
 
 .property-card__image {
   width: 100%;
-  /* height: 100%; */
-    height: 200px;
+  height: 200px;
   object-fit: cover;
 }
 
@@ -90,45 +91,53 @@
 .property-card__content {
   flex-grow: 1;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 6px;
 }
 
 .property-card__title {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
-  /* margin: 0 0 12px 0; */
+  margin: 0;
   color: #333;
   display: -webkit-box;
-  --webkit-line-clamp: 2;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Location */
 .property-card__location {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
-  margin-bottom: 5px;
   color: #666;
+  text-align: left;
+  margin: 0;
 }
 
 .property-card__location span {
   font-size: 14px;
   display: -webkit-box;
-  --webkit-line-clamp: 1;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Specifications */
- .property-card__specs {
+.property-card__specs {
   display: flex;
-  flex-direction: row; /* Force horizontal layout */
-  justify-content: space-between; /* Even spacing */
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px; /* Space between items */
-  margin-bottom: 5px;
+  gap: 10px;
+  margin: 0;
 }
 
 .property-card__spec {
@@ -170,34 +179,35 @@
 .property-card__amenities {
   font-size: 12px;
   color: #666;
-  margin-bottom: 12px;
-}
-
-.property-card__amenities strong {
-  color: #2F80ED;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Description */
 .property-card__description {
   font-size: 12px;
   color: #666;
-  margin-bottom: 12px;
+  margin: 0;
   display: -webkit-box;
-  --webkit-line-clamp: 2;
-  --webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Pricing */
 .property-card__pricing {
-  border-radius: 8px;
-  margin-top: 8px;
+  margin: 2px 0; /* ✅ tightened */
 }
 
 .property-card__rent {
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .property-card__price {
@@ -217,17 +227,18 @@
   color: #666;
 }
 
-/* ✅ Actions (Updated) */
+/* Actions */
 .property-card__actions {
-  margin-top: auto; /* stick to bottom */
+  margin-top: auto; /* ✅ ensures button sticks at bottom */
+  padding: 8px 0; /* ✅ equal space above/below button */
   width: 100%;
 }
 
 .property-card__action-btn {
-  width: 100%; /* full width */
-  padding: 10px;
+  width: 100%;
+  padding: 8px;
   border: none;
-  border-radius: 0; /* align with card edges */
+  border-radius: 0;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -254,7 +265,7 @@
   background-color: #f0f7ff;
 }
 
-.property-overlay{
+.property-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -267,20 +278,15 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .property-card {
+    min-height: auto;
+  }
   .property-card__content {
     padding: 12px;
+    gap: 8px;
   }
-  
   .property-card__title {
     font-size: 16px;
-  }
-  
-  .property-card__pricing {
-    padding: 8px;
-  }
-  
-  .property-card__actions {
-    padding: 0;
   }
 }
 
@@ -288,23 +294,10 @@
   .property-card__specs {
     grid-template-columns: 1fr 1fr;
   }
-  
   .property-card__spec {
     padding: 3px 6px;
   }
-  
   .property-card__spec span {
     font-size: 11px;
   }
-}
-
-/* ✅ Ensure content + actions layout */
-.property-card__content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.property-card__content-inner {
-  flex: 1;
 }

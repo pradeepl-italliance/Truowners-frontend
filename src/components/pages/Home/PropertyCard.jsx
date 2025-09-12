@@ -1,29 +1,29 @@
 // src/components/cards/PropertyCard/PropertyCard.jsx
-import React from 'react';
-import './PropertyCard.css';
-import bed from '../../../assets/images/Bed.png';
-import bath from '../../../assets/images/Bath.png';
-import areaImg from '../../../assets/images/area.png';
-import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import FavoriteOutlined from '@mui/icons-material/FavoriteOutlined';
-import Favorite from '@mui/icons-material/Favorite';
-import { useWishlist } from '../../../context/Wishlist';
-import watermark from '../../../assets/images/water1.png';
-import fallbackImg from '../../../assets/images/Errorimg.png';
+import React from "react";
+import "./PropertyCard.css";
+import bed from "../../../assets/images/Bed.png";
+import bath from "../../../assets/images/Bath.png";
+import areaImg from "../../../assets/images/area.png";
+import { styled } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import FavoriteOutlined from "@mui/icons-material/FavoriteOutlined";
+import Favorite from "@mui/icons-material/Favorite";
+import { useWishlist } from "../../../context/Wishlist";
+import watermark from "../../../assets/images/water1.png";
+import fallbackImg from "../../../assets/images/Errorimg.png";
 
 const WishlistButton = styled(IconButton)(({ theme, isWishlisted }) => ({
-  position: 'absolute',
+  position: "absolute",
   top: 8,
   right: 8,
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  color: isWishlisted ? '#d32f2f' : '#666',
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
+  color: isWishlisted ? "#d32f2f" : "#666",
   zIndex: 1,
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    color: '#d32f2f',
-    transform: 'scale(1.1)',
+  transition: "all 0.2s ease",
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    color: "#d32f2f",
+    transform: "scale(1.1)",
   },
 }));
 
@@ -38,7 +38,7 @@ const PropertyCard = ({
 
   // Add comprehensive validation for property
   if (!property) {
-    console.error('PropertyCard: No property data provided');
+    console.error("PropertyCard: No property data provided");
     return (
       <div className="property-card property-card--error">
         <div className="property-card__content">
@@ -50,17 +50,18 @@ const PropertyCard = ({
 
   const getLocationString = (location) => {
     try {
-      if (typeof location === 'string' && location.trim()) return location;
-      if (location && typeof location === 'object') {
+      if (typeof location === "string" && location.trim()) return location;
+      if (location && typeof location === "object") {
         if (location.address) return location.address;
         if (location.street) return location.street;
-        if (location.city && location.state) return `${location.city}, ${location.state}`;
+        if (location.city && location.state)
+          return `${location.city}, ${location.state}`;
         if (location.city) return location.city;
       }
-      return 'Location not specified';
+      return "Location not specified";
     } catch (error) {
-      console.warn('Error parsing location:', error);
-      return 'Location not specified';
+      console.warn("Error parsing location:", error);
+      return "Location not specified";
     }
   };
 
@@ -74,7 +75,7 @@ const PropertyCard = ({
 
   const formatNumber = (value) => {
     const num = parseInt(value, 10) || 0;
-    return num === 0 ? 'N/A' : String(num);
+    return num === 0 ? "N/A" : String(num);
   };
 
   const getSafeImages = (images) => {
@@ -82,18 +83,18 @@ const PropertyCard = ({
     return images.filter(
       (img) =>
         img &&
-        typeof img === 'string' &&
+        typeof img === "string" &&
         img.trim() &&
-        !img.toLowerCase().includes('car') &&
-        !img.toLowerCase().includes('vehicle') &&
-        !img.toLowerCase().includes('auto')
+        !img.toLowerCase().includes("car") &&
+        !img.toLowerCase().includes("vehicle") &&
+        !img.toLowerCase().includes("auto")
     );
   };
 
   // Enhanced property ID validation
   const getPropertyId = () => {
     if (!property.id && !property._id) {
-      console.error('PropertyCard: Property missing ID', property);
+      console.error("PropertyCard: Property missing ID", property);
       return null;
     }
 
@@ -101,13 +102,13 @@ const PropertyCard = ({
     let id = property.id || property._id;
 
     // If ID is an object (like MongoDB ObjectId), convert to string
-    if (typeof id === 'object' && id !== null) {
-      if (id.toString && typeof id.toString === 'function') {
+    if (typeof id === "object" && id !== null) {
+      if (id.toString && typeof id.toString === "function") {
         id = id.toString();
       } else if (id.$oid) {
         id = id.$oid; // Handle MongoDB extended JSON format
       } else {
-        console.error('PropertyCard: Invalid property ID format', id);
+        console.error("PropertyCard: Invalid property ID format", id);
         return null;
       }
     }
@@ -120,23 +121,23 @@ const PropertyCard = ({
 
     const propertyId = getPropertyId();
     if (!propertyId) {
-      console.error('PropertyCard: Cannot view details - invalid property ID');
-      alert('Error: Property ID is invalid');
+      console.error("PropertyCard: Cannot view details - invalid property ID");
+      alert("Error: Property ID is invalid");
       return;
     }
 
-    console.log('PropertyCard: Viewing details for property ID:', propertyId);
+    console.log("PropertyCard: Viewing details for property ID:", propertyId);
 
     if (!isAuthenticated) {
       try {
-        localStorage.setItem('redirectAfterLogin', `/property/${propertyId}`);
+        localStorage.setItem("redirectAfterLogin", `/property/${propertyId}`);
       } catch (error) {
-        console.warn('Could not save redirect URL to localStorage:', error);
+        console.warn("Could not save redirect URL to localStorage:", error);
       }
       if (onLoginRequired) {
         onLoginRequired();
       } else {
-        alert('Please login to view details');
+        alert("Please login to view details");
       }
       return;
     }
@@ -145,15 +146,15 @@ const PropertyCard = ({
       try {
         onViewDetails(propertyId);
       } catch (error) {
-        console.error('Error in onViewDetails callback:', error);
-        alert('Error loading property details');
+        console.error("Error in onViewDetails callback:", error);
+        alert("Error loading property details");
       }
     } else {
       try {
         window.location.href = `/property/${propertyId}`;
       } catch (error) {
-        console.error('Error navigating to property:', error);
-        alert('Error navigating to property details');
+        console.error("Error navigating to property:", error);
+        alert("Error navigating to property details");
       }
     }
   };
@@ -163,7 +164,9 @@ const PropertyCard = ({
 
     const propertyId = getPropertyId();
     if (!propertyId) {
-      console.error('PropertyCard: Cannot toggle wishlist - invalid property ID');
+      console.error(
+        "PropertyCard: Cannot toggle wishlist - invalid property ID"
+      );
       return;
     }
 
@@ -171,7 +174,7 @@ const PropertyCard = ({
       if (onLoginRequired) {
         onLoginRequired();
       } else {
-        alert('Please login to add to wishlist');
+        alert("Please login to add to wishlist");
       }
       return;
     }
@@ -188,17 +191,21 @@ const PropertyCard = ({
         onWishlistToggle(nextState);
       }
 
-      console.log(`Property ${propertyId} ${nextState ? 'added to' : 'removed from'} wishlist`);
+      console.log(
+        `Property ${propertyId} ${
+          nextState ? "added to" : "removed from"
+        } wishlist`
+      );
     } catch (error) {
-      console.error('Error toggling wishlist:', error);
-      alert('Error updating wishlist');
+      console.error("Error toggling wishlist:", error);
+      alert("Error updating wishlist");
     }
   };
 
   const handleImageError = (e) => {
-    e.currentTarget.style.display = 'none';
+    e.currentTarget.style.display = "none";
     const placeholder = e.currentTarget.nextElementSibling;
-    if (placeholder) placeholder.style.display = 'flex';
+    if (placeholder) placeholder.style.display = "flex";
   };
 
   // Get property data with validation
@@ -212,7 +219,9 @@ const PropertyCard = ({
   return (
     <div className="property-card" onClick={handleViewDetailsClick}>
       <div className="property-card__media-container">
-        <div className="property-card__badge">{property?.propertyType || 'Property'}</div>
+        <div className="property-card__badge">
+          {property?.propertyType || "Property"}
+        </div>
 
         <WishlistButton
           onClick={handleWishlistClick}
@@ -222,14 +231,14 @@ const PropertyCard = ({
             !isAuthenticated
               ? "Login to add to wishlist"
               : wishlisted
-                ? "Remove from wishlist"
-                : "Add to wishlist"
+              ? "Remove from wishlist"
+              : "Add to wishlist"
           }
           isWishlisted={wishlisted && isAuthenticated}
           disabled={!propertyId} // Disable if no valid ID
         >
           {wishlisted && isAuthenticated ? (
-            <Favorite sx={{ color: '#d32f2f' }} />
+            <Favorite sx={{ color: "#d32f2f" }} />
           ) : (
             <FavoriteOutlined />
           )}
@@ -254,49 +263,57 @@ const PropertyCard = ({
         )}   */}
 
         {safeImages.length > 0 ? (
-  <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
-    <img
-      className="property-card__image"
-      src={safeImages[0]}
-      alt={property?.title || 'Property'}
-      onError={(e) => {
-        e.currentTarget.onerror = null; // prevent infinite loop
-        e.currentTarget.src = fallbackImg; // show fallback when error
-      }}
-    />
-    {/* ✅ Watermark Overlay */}
-    <img
-      src={watermark}
-      alt="Watermark"
-      className="property-overlay"
-    />
-  </div>
-) : (
-  <div style={{ position: 'relative', display: 'inline-block', width: '100%' }}>
-    <img
-      className="property-card__image"
-      src={fallbackImg}
-      alt="Fallback"
-    />
-    {/* ✅ Watermark Overlay */}
-    <img
-      src={watermark}
-      alt="Watermark"
-      className="property-overlay"
-    />
-  </div>
-)}
-
+          <div
+            style={{
+              position: "relative",
+              display: "inline-block",
+              width: "100%",
+            }}
+          >
+            <img
+              className="property-card__image"
+              src={safeImages[0]}
+              alt={property?.title || "Property"}
+              onError={(e) => {
+                e.currentTarget.onerror = null; // prevent infinite loop
+                e.currentTarget.src = fallbackImg; // show fallback when error
+              }}
+            />
+            {/* ✅ Watermark Overlay */}
+            <img src={watermark} alt="Watermark" className="property-overlay" />
+          </div>
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              display: "inline-block",
+              width: "100%",
+            }}
+          >
+            <img
+              className="property-card__image"
+              src={fallbackImg}
+              alt="Fallback"
+            />
+            {/* ✅ Watermark Overlay */}
+            <img src={watermark} alt="Watermark" className="property-overlay" />
+          </div>
+        )}
       </div>
 
       <div className="property-card__content">
         <div className="property-card__pricing">
-          <span className="property-card__price">{formatCurrency(property?.rent)}</span>
+          <span className="property-card__price">
+            {formatCurrency(property?.rent)}
+          </span>
         </div>
 
-        <h3 className="property-card__title">{property?.title || 'Untitled Property'}</h3>
+        <h3
+        title={property?.title} className="property-card__title">
+          {property?.title || "Untitled Property"}
+        </h3>
 
-        <div className="property-card__location">
+        <div className="property-card__location" title={getLocationString(property?.location)}>
           <span>{getLocationString(property?.location)}</span>
         </div>
 
@@ -315,26 +332,30 @@ const PropertyCard = ({
           </div>
         </div>
 
-        {Array.isArray(property?.amenities) && property.amenities.length > 0 && (
-          <div className="property-card__amenities">
-            <strong>Amenities:</strong> {property.amenities.slice(0, 3).join(', ')}
-            {property.amenities.length > 3 && ` +${property.amenities.length - 3} more`}
-          </div>
-        )}
+        {Array.isArray(property?.amenities) &&
+          property.amenities.length > 0 && (
+            <div className="property-card__amenities">
+              <strong>Amenities:</strong>{" "}
+              {property.amenities.slice(0, 3).join(", ")}
+              {property.amenities.length > 3 &&
+                ` +${property.amenities.length - 3} more`}
+            </div>
+          )}
 
         <div className="property-card__actions">
           <button
-            className={`property-card__action-btn ${isAuthenticated ? 'authenticated' : 'unauthenticated'} rounded-2`}
+            className={`property-card__action-btn ${
+              isAuthenticated ? "authenticated" : "unauthenticated"
+            } rounded-2`}
             onClick={handleViewDetailsClick}
             type="button"
             disabled={!propertyId} // Disable if no valid ID
           >
             {!propertyId
-              ? 'Property Unavailable'
+              ? "Property Unavailable"
               : isAuthenticated
-                ? 'View Details'
-                : 'Login to View Details'
-            }
+              ? "View Details"
+              : "Login to View Details"}
           </button>
         </div>
       </div>

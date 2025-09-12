@@ -35,7 +35,7 @@ const ContactPage = () => {
               <FaEnvelope className="icon" />
               <div>
                 <h4>Email</h4>
-                <p>gre71999@gmail.com</p>
+                <p>Truowners@gmail.com</p>
               </div>
             </li>
              <li>

@@ -25,6 +25,12 @@ import studioImg from '/src/assets/images/studio.jpg'
 import shopImg from '/src/assets/images/shop.jpg'
 import officeImg from '/src/assets/images/office.jpg'
 import indepenImg from '/src/assets/images/indepen.jpg'
+import truOwnersLogo from '../../../assets/images/logo-Copy.jpg';
+import icon1 from '../../../assets/images/Icon(1).png';
+import icon2 from '../../../assets/images/Icon(2).png';
+import icon3 from '../../../assets/images/Icon(3).png';
+
+
 // import Button from '@mui/material/Button';
 // import AddAlertIcon from '@mui/icons-material/AddAlert';
 // import AccountCircleSharp from '@mui/icons-material/AccountCircleSharp';
@@ -543,7 +549,7 @@ const HomePage = () => {
                         <div className="card-g  bg-col1">
                           <div className="row-g">
                             <div className="col-left">
-                              <img src="/src/assets/images/Icon(1).png" style={{ width: '50px' }} />
+                                <img src={icon1} style={{ width: '50px' }} />
                             </div>
                             <div className="col-right">
                               <h3>Verified Listings
@@ -557,7 +563,7 @@ const HomePage = () => {
                       <div className="slide"> <div className="card-g bg-col2">
                         <div className="row-g">
                           <div className="col-left">
-                            <img src="/src/assets/images/Icon(2).png" style={{ width: '50px' }} />
+                           <img src={icon2} style={{ width: '50px' }} />
                           </div>
                           <div className="col-right">
                             <h3>Find the best deal</h3>
@@ -569,7 +575,7 @@ const HomePage = () => {
                       <div className="slide"> <div className="card-g bg-col3">
                         <div className="row-g">
                           <div className="col-left">
-                            <img src="/src/assets/images/Icon(3).png" style={{ width: '50px' }} />
+                             <img src={icon3} style={{ width: '50px' }} />
                           </div>
                           <div className="col-right">
                             <h3>Get ready to apply</h3>
@@ -758,7 +764,8 @@ const HomePage = () => {
               <div className="column form-column" >
                 <form >
                   <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <img src=" /src/assets/images/logo-Copy.jpg" style={{ width: '200px' }} />
+                    <img src={truOwnersLogo} alt="TruOwners Logo" style={{ width: '200px' }} />
+
                     <label className='title-color' >VIEW LISTINGS</label>
                   </div>
                   {/* <select>

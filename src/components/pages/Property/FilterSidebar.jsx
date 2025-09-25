@@ -44,6 +44,7 @@ const bedroomOptions = [
 ];
 
 const defaultFilters = {
+  status: "",
   propertyType: "",
   city: "",
   bedrooms: "",
@@ -55,7 +56,7 @@ const defaultFilters = {
   rentMax: "",
   amenities: [""],
   title: "",
-  search: "",
+  search: "All",
 };
 
 // ======== Styled Components ========
@@ -81,11 +82,16 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginBottom: theme.spacing(3),
+  display: "grid", // Using grid here for the tabs container
+  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", // Adjust grid layout for the tabs
+  gap: theme.spacing(2), // Adds spacing between the tabs
   "& .MuiTabs-flexContainer": {
-    justifyContent: "center",
+    justifyContent: "center", // Center the tab flex container
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", // Grid for the tab items
   },
   "& .MuiTabs-indicator": {
-    display: "none",
+    display: "none", // Hides the default indicator for a cleaner design
   },
 }));
 
@@ -318,25 +324,34 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
     });
   };
 
-  const handleSearchClick = () => {
-    const params = new URLSearchParams();
+ const handleSearchClick = () => {
+  const params = new URLSearchParams();
 
-    if (statusTab === 1) params.append("status", "rent");
-    if (filters.propertyType) params.append("propertyType", filters.propertyType);
-    if (filters.city) params.append("city", filters.city);
-    if (filters.bedrooms) params.append("bedrooms", filters.bedrooms);
-    if (filters.search) params.append("search", filters.search);
-    if (filters.amenities) params.append("amenities", filters.amenities);
-    if (filters.title) params.append("title", filters.title);
-    if (filters.budgetRange[0] > 0) params.append("minBudget", filters.budgetRange[0]);
-    if (filters.budgetRange[1] < 100000) params.append("maxBudget", filters.budgetRange[1]);
-    if (filters.rentRange[0] > 0) params.append("minRent", filters.rentRange[0]);
-    if (filters.rentRange[1] < 50000) params.append("maxRent", filters.rentRange[1]);
+  // Use statusTab directly instead of filters.status
+  const statusValue =
+    statusTab === 0 ? "All" :
+    statusTab === 1 ? "Rent" :
+    statusTab === 2 ? "Sale" :
+    "Lease";
 
-    lastSearchRef.current = filters.search;
+  params.append("status", statusValue);
 
-    onSearch(params.toString(), filters);
-  };
+  if (filters.propertyType) params.append("propertyType", filters.propertyType);
+  if (filters.city) params.append("city", filters.city);
+  if (filters.bedrooms) params.append("bedrooms", filters.bedrooms);
+  if (filters.search) params.append("search", filters.search);
+  if (filters.amenities && filters.amenities.length > 0) params.append("amenities", filters.amenities);
+  if (filters.title) params.append("title", filters.title);
+  if (filters.budgetRange[0] > 0) params.append("minBudget", filters.budgetRange[0]);
+  if (filters.budgetRange[1] < 100000) params.append("maxBudget", filters.budgetRange[1]);
+  if (filters.rentRange[0] > 0) params.append("minRent", filters.rentRange[0]);
+  if (filters.rentRange[1] < 50000) params.append("maxRent", filters.rentRange[1]);
+
+  lastSearchRef.current = filters.search;
+
+  onSearch(params.toString(), { ...filters, status: statusValue });
+};
+
 
 
   const handleClearFilters = () => {
@@ -422,10 +437,21 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
       </Box>
 
       {/* Tabs */}
-      <Box sx={{ mb: 4, textAlign: "center" }}>
-        <StyledTabs value={statusTab} onChange={handleTabChange} centered>
+      <Box 
+       sx={{
+        '& .MuiTabs-flexContainer': {
+          justifyContent: 'center',
+          display: "grid", // change justify to center (or 'flex-start', 'flex-end', etc.)
+        },
+        mb: 4, textAlign: "center", display: "grid"
+      }}>
+        <StyledTabs
+        
+         value={statusTab} onChange={handleTabChange} centered >
           <StyledTab label="ALL STATUS" />
           <StyledTab label="FOR RENT" />
+          <StyledTab label="FOR SALE" />
+          <StyledTab label="FOR LEASE" />
         </StyledTabs>
       </Box>
 
@@ -569,6 +595,8 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
           </Grid>
 
           <Grid item xs={12} md={5} maxWidth={"350px"}>
+           
+            {((statusTab != 2) && (statusTab != 3) ) && <>
             <SectionLabel>
               <AttachMoneyIcon sx={{ fontSize: 16 }} />
               RENT RANGE
@@ -619,7 +647,9 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
                 </Grid>
               </Grid>
 
-            </SliderContainer>
+            </SliderContainer>  </>
+}
+          
             <Grid>
               <SectionLabel>
                 Amenities

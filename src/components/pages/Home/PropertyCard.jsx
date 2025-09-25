@@ -1,5 +1,5 @@
 // src/components/cards/PropertyCard/PropertyCard.jsx
-import React from "react";
+import React, { useState } from "react";
 import "./PropertyCard.css";
 import bed from "../../../assets/images/Bed.png";
 import bath from "../../../assets/images/Bath.png";
@@ -33,10 +33,10 @@ const PropertyCard = ({
   onLoginRequired,
   onViewDetails,
   onWishlistToggle,
+  postType
 }) => {
   const { isIn, toggle } = useWishlist();
 
-  // Add comprehensive validation for property
   if (!property) {
     console.error("PropertyCard: No property data provided");
     return (
@@ -48,20 +48,29 @@ const PropertyCard = ({
     );
   }
 
+  const capitalizeText = (text) => {
+    if (!text) return "";
+    return text
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   const getLocationString = (location) => {
     try {
-      if (typeof location === "string" && location.trim()) return location;
+      if (typeof location === "string" && location.trim()) return capitalizeText(location);
       if (location && typeof location === "object") {
-        if (location.address) return location.address;
-        if (location.street) return location.street;
+        if (location.address) return capitalizeText(location.address);
+        if (location.street) return capitalizeText(location.street);
         if (location.city && location.state)
-          return `${location.city}, ${location.state}`;
-        if (location.city) return location.city;
+          return capitalizeText(`${location.city}, ${location.state}`);
+        if (location.city) return capitalizeText(location.city);
       }
-      return "Location not specified";
+      return "Location Not Specified";
     } catch (error) {
       console.warn("Error parsing location:", error);
-      return "Location not specified";
+      return "Location Not Specified";
     }
   };
 
@@ -91,43 +100,33 @@ const PropertyCard = ({
     );
   };
 
-  // Enhanced property ID validation
   const getPropertyId = () => {
     if (!property.id && !property._id) {
       console.error("PropertyCard: Property missing ID", property);
       return null;
     }
-
-    // Handle both id and _id (common in MongoDB)
     let id = property.id || property._id;
-
-    // If ID is an object (like MongoDB ObjectId), convert to string
     if (typeof id === "object" && id !== null) {
       if (id.toString && typeof id.toString === "function") {
         id = id.toString();
       } else if (id.$oid) {
-        id = id.$oid; // Handle MongoDB extended JSON format
+        id = id.$oid;
       } else {
         console.error("PropertyCard: Invalid property ID format", id);
         return null;
       }
     }
-
     return String(id);
   };
 
   const handleViewDetailsClick = (e) => {
     e.stopPropagation();
-
     const propertyId = getPropertyId();
     if (!propertyId) {
       console.error("PropertyCard: Cannot view details - invalid property ID");
       alert("Error: Property ID is invalid");
       return;
     }
-
-    console.log("PropertyCard: Viewing details for property ID:", propertyId);
-
     if (!isAuthenticated) {
       try {
         localStorage.setItem("redirectAfterLogin", `/property/${propertyId}`);
@@ -141,7 +140,6 @@ const PropertyCard = ({
       }
       return;
     }
-
     if (onViewDetails) {
       try {
         onViewDetails(propertyId);
@@ -161,7 +159,6 @@ const PropertyCard = ({
 
   const handleWishlistClick = (e) => {
     e.stopPropagation();
-
     const propertyId = getPropertyId();
     if (!propertyId) {
       console.error(
@@ -169,7 +166,6 @@ const PropertyCard = ({
       );
       return;
     }
-
     if (!isAuthenticated) {
       if (onLoginRequired) {
         onLoginRequired();
@@ -178,23 +174,15 @@ const PropertyCard = ({
       }
       return;
     }
-
     try {
       const currentState = isIn(propertyId);
       const nextState = !currentState;
-
-      // Toggle in context
       toggle(propertyId);
-
-      // Notify parent component
       if (onWishlistToggle) {
         onWishlistToggle(nextState);
       }
-
       console.log(
-        `Property ${propertyId} ${
-          nextState ? "added to" : "removed from"
-        } wishlist`
+        `Property ${propertyId} ${nextState ? "added to" : "removed from"} wishlist`
       );
     } catch (error) {
       console.error("Error toggling wishlist:", error);
@@ -208,7 +196,6 @@ const PropertyCard = ({
     if (placeholder) placeholder.style.display = "flex";
   };
 
-  // Get property data with validation
   const propertyId = getPropertyId();
   const safeImages = getSafeImages(property?.images);
   const wishlisted = propertyId ? isIn(propertyId) : false;
@@ -235,7 +222,7 @@ const PropertyCard = ({
               : "Add to wishlist"
           }
           isWishlisted={wishlisted && isAuthenticated}
-          disabled={!propertyId} // Disable if no valid ID
+          disabled={!propertyId}
         >
           {wishlisted && isAuthenticated ? (
             <Favorite sx={{ color: "#d32f2f" }} />
@@ -243,24 +230,6 @@ const PropertyCard = ({
             <FavoriteOutlined />
           )}
         </WishlistButton>
-
-        {/* {safeImages.length > 0 ? (
-          <>
-            <img
-              className="property-card__image"
-              src={safeImages[0]}
-              alt={property?.title || 'Property'}
-              onError={handleImageError}
-            />
-            <div className="property-card__image-placeholder" style={{ display: 'none' }}>
-              <span>No Image Available</span>
-            </div>
-          </>
-        ) : (
-          <div className="property-card__image-placeholder">
-            <span>No Image Available</span>
-          </div>
-        )}   */}
 
         {safeImages.length > 0 ? (
           <div
@@ -275,11 +244,10 @@ const PropertyCard = ({
               src={safeImages[0]}
               alt={property?.title || "Property"}
               onError={(e) => {
-                e.currentTarget.onerror = null; // prevent infinite loop
-                e.currentTarget.src = fallbackImg; // show fallback when error
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = fallbackImg;
               }}
             />
-            {/* ✅ Watermark Overlay */}
             <img src={watermark} alt="Watermark" className="property-overlay" />
           </div>
         ) : (
@@ -295,25 +263,36 @@ const PropertyCard = ({
               src={fallbackImg}
               alt="Fallback"
             />
-            {/* ✅ Watermark Overlay */}
             <img src={watermark} alt="Watermark" className="property-overlay" />
           </div>
         )}
       </div>
 
       <div className="property-card__content">
-        <div className="property-card__pricing">
+        <div
+          className="property-card__pricing"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <span className="property-card__price">
             {formatCurrency(property?.rent)}
           </span>
+          <span className="property-card__status-all">
+            {postType}
+          </span>
         </div>
 
-        <h3
-        title={property?.title} className="property-card__title">
-          {property?.title || "Untitled Property"}
+        <h3 title={property?.title} className="property-card__title">
+          {capitalizeText(property?.title) || "Untitled Property"}
         </h3>
 
-        <div className="property-card__location" title={getLocationString(property?.location)}>
+        <div
+          className="property-card__location"
+          title={getLocationString(property?.location)}
+        >
           <span>{getLocationString(property?.location)}</span>
         </div>
 
@@ -332,16 +311,6 @@ const PropertyCard = ({
           </div>
         </div>
 
-        {Array.isArray(property?.amenities) &&
-          property.amenities.length > 0 && (
-            <div className="property-card__amenities">
-              <strong>Amenities:</strong>{" "}
-              {property.amenities.slice(0, 3).join(", ")}
-              {property.amenities.length > 3 &&
-                ` +${property.amenities.length - 3} more`}
-            </div>
-          )}
-
         <div className="property-card__actions">
           <button
             className={`property-card__action-btn ${
@@ -349,7 +318,7 @@ const PropertyCard = ({
             } rounded-2`}
             onClick={handleViewDetailsClick}
             type="button"
-            disabled={!propertyId} // Disable if no valid ID
+            disabled={!propertyId}
           >
             {!propertyId
               ? "Property Unavailable"

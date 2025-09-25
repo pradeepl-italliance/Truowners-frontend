@@ -41,6 +41,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
   const [showRegister, setShowRegister] = useState(false);
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [postType, setPostType] = useState(null);
 
   const [filters, setFilters] = useState({
     propertyType: "",
@@ -341,6 +342,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
                 onClick={() => handlePropertyClick(property)}
                 onLoginRequired={handleLoginRequired}
                 isAuthenticated={isAuthenticated}
+                postType={property?.post_type ?? "Rent"}
               />
             ))}
           </div>

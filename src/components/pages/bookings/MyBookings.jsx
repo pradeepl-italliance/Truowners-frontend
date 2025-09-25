@@ -3,42 +3,36 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
 import { buildApiUrl } from '../../../config/api'
-import {
-  handleApiError,
-  validateApiResponse
-} from '../../../utils/errorHandler'
-
-// ────── MUI ──────────────────────────────────────────────────────────
+import { handleApiError, validateApiResponse } from '../../../utils/errorHandler'
 import {
   Box,
-  Card,
-  CardContent,
+  Paper,
   Typography,
   Chip,
   CircularProgress,
   Alert,
-  Grid
+  Grid,
+  Divider
 } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import PlaceIcon from '@mui/icons-material/Place'
 
-const STATUS_GRADIENTS = {
-  approved: 'linear-gradient(135deg, #4caf50, #81c784)',
-  pending: 'linear-gradient(135deg, #ff9800, #ffb74d)',
-  rejected: 'linear-gradient(135deg, #f44336, #e57373)',
-  cancelled: 'linear-gradient(135deg, #9e9e9e, #bdbdbd)'
+const STATUS_COLORS = {
+  approved: '#4caf50',
+  pending: '#ff9800',
+  rejected: '#f44336',
+  cancelled: '#9e9e9e'
 }
 
 const MyBookings = () => {
-  const navigate   = useNavigate()
+  const navigate = useNavigate()
   const { token, isAuthenticated, user } = useAuth()
 
   const [bookings, setBookings] = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // ───── fetch ───────────────────────────────────────────────────────
   const fetchBookings = async () => {
     if (!isAuthenticated || user?.role !== 'user') {
       setLoading(false)
@@ -51,7 +45,6 @@ const MyBookings = () => {
       })
 
       if (!res.ok) throw new Error(handleApiError(null, res))
-
       const data = await res.json()
       validateApiResponse(data)
 
@@ -66,37 +59,29 @@ const MyBookings = () => {
 
   useEffect(() => { fetchBookings() }, [isAuthenticated, token]) // eslint-disable-line
 
-  // ───── UI states ───────────────────────────────────────────────────
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-        <CircularProgress />
-      </Box>
-    )
-  }
+  if (loading) return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+      <CircularProgress />
+    </Box>
+  )
 
-  if (error) {
-    return (
-      <Box sx={{ maxWidth: 480, mx: 'auto', mt: 4 }}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    )
-  }
+  if (error) return (
+    <Box sx={{ maxWidth: 480, mx: 'auto', mt: 4 }}>
+      <Alert severity="error">{error}</Alert>
+    </Box>
+  )
 
-  if (bookings.length === 0) {
-    return (
-      <Box sx={{ textAlign: 'center', mt: 6 }}>
-        <Typography variant="h6">No bookings found.</Typography>
-      </Box>
-    )
-  }
+  if (bookings.length === 0) return (
+    <Box sx={{ textAlign: 'center', mt: 6 }}>
+      <Typography variant="h6">No bookings found.</Typography>
+    </Box>
+  )
 
-  // ───── render ──────────────────────────────────────────────────────
   return (
     <Box sx={{ p: { xs: 2, sm: 4 } }}>
-      <Typography 
-        variant="h5" 
-        sx={{ mb: 3, fontWeight: 600, textAlign: 'center' }}
+      <Typography
+        variant="h5"
+        sx={{ mb: 4, fontWeight: 600, textAlign: 'center' }}
       >
         My Bookings
       </Typography>
@@ -106,125 +91,103 @@ const MyBookings = () => {
           const { _id, property, timeSlot, status, date } = b
           const loc = property.location
 
+          // Capitalize BHK using string method
+          const titleWithCapitalBHK = property.title
+            .split(' ')
+            .map(word => word.toLowerCase() === 'bhk' ? 'BHK' : word)
+            .join(' ')
+
           return (
             <Grid item xs={12} sm={6} md={4} key={_id}>
-              <Box
+              <Paper
+                elevation={3}
                 sx={{
-                  borderRadius: 3,
-                  p: 0.5,
-                  background: STATUS_GRADIENTS[status] || '#ddd',
                   display: 'flex',
-                  justifyContent: 'center'
+                  flexDirection: 'column',
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.02)' }
                 }}
+                onClick={() => navigate(`/property/${property._id}`)}
               >
-                <Card
-                  sx={{
-                    width: 400, // ✅ fixed width
-                    height: 250, // ✅ fixed height
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    textAlign: 'center',
-                    p: 2
-                  }}
-                  onClick={() => navigate(`/property/${property._id}`)}
-                >
-                  <CardContent
-                    sx={{
-                      flexGrow: 1,
-                      width: '100%',
-                      p: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between'
-                    }}
+                {/* Status Bar */}
+                <Box sx={{ height: 6, backgroundColor: STATUS_COLORS[status] || '#ddd' }} />
+
+                {/* Card Content */}
+                <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {/* Title with BHK capitalized */}
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: 600, wordBreak: 'break-word' }}
                   >
-                    {/* Title */}
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        fontWeight: 600,
-                        whiteSpace: 'normal',   // ✅ allow wrapping
-                        wordBreak: 'break-word', // ✅ break long words
-                        overflow: 'hidden'
-                      }}
-                    >
-                      {property.title}
-                    </Typography>
+                    {titleWithCapitalBHK}
+                  </Typography>
 
-                    {/* Address */}
-                    {loc?.address && (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'flex-start',
-                          mt: 0.5,
-                          px: 1
-                        }}
-                      >
-                        <PlaceIcon sx={{ fontSize: 18, mr: 0.5, mt: '2px' }} />
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            whiteSpace: 'normal',  // ✅ wrap
-                            wordBreak: 'break-word',
-                            overflow: 'hidden',
-                            maxHeight: 60,         // ✅ prevent overflow
-                            textAlign: 'left'
-                          }}
-                        >
-                          {loc.address}{loc.city ? `, ${loc.city}` : ''}
-                        </Typography>
-                      </Box>
-                    )}
-
-                    {/* Date + Time */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 1, flexWrap: 'wrap' }}>
-                      <Chip
-                        icon={<EventIcon />}
-                        label={new Date(date).toLocaleDateString(undefined, {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                        size="small"
-                      />
-                      <Chip icon={<ScheduleIcon />} label={timeSlot} size="small" />
-                    </Box>
-
-                    {/* Status Row */}
-                    <Box 
-                      sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'flex-end', 
-                        mt: 2 
-                      }}
-                    >
+                  {/* Address */}
+                  {loc?.address && (
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}>
+                      <PlaceIcon sx={{ fontSize: 18, mt: 0.5 }} />
                       <Typography
                         variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          textTransform: 'capitalize',
-                          color:
-                            status === 'approved'
-                              ? 'green'
-                              : status === 'pending'
-                              ? 'orange'
-                              : 'red'
-                        }}
+                        color="text.secondary"
+                        sx={{ wordBreak: 'break-word' }}
                       >
-                        {status}
+                        {loc.address}{loc.city ? `, ${loc.city}` : ''}
                       </Typography>
                     </Box>
-                  </CardContent>
-                </Card>
-              </Box>
+                  )}
+
+                  <Divider sx={{ my: 1 }} />
+
+                  {/* Date + Time with better vertical padding */}
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    <Chip
+                      icon={<EventIcon />}
+                      label={new Date(date).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                      sx={{
+                        px: 1.5,
+                        borderRadius: 2,
+                        minHeight: 36, // taller chip
+                        '& .MuiChip-label': {
+                          py: 0.8 // more padding inside
+                        }
+                      }}
+                    />
+                    <Chip
+                      icon={<ScheduleIcon />}
+                      label={timeSlot}
+                      sx={{
+                        px: 1.5,
+                        borderRadius: 2,
+                        minHeight: 36,
+                        '& .MuiChip-label': {
+                          py: 0.8
+                        }
+                      }}
+                    />
+                  </Box>
+
+                  {/* Status */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      textTransform: 'capitalize',
+                      color: STATUS_COLORS[status] || 'black',
+                      mt: 1,
+                      alignSelf: 'flex-end'
+                    }}
+                  >
+                    {status}
+                  </Typography>
+                </Box>
+              </Paper>
             </Grid>
           )
         })}

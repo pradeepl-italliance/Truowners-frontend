@@ -49,6 +49,18 @@
   font-size: 14px;
   color: #666;
 }
+.property-card__status-all {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: rgba(47, 128, 237, 0.9);
+  /* padding-left: 6px;
+  padding-right: 6px; */
+  padding-inline: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-radius: 8px;
+}
 
 /* Badge */
 .property-card__badge {

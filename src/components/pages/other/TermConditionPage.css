@@ -1,5 +1,4 @@
 .terms-container {
-  /* margin-top:760px !important; */
   color: #333;
 }
 
@@ -15,14 +14,13 @@
   z-index: 1;
 }
 
-.terms-banner::before{
-     content: '';
+.terms-banner::before {
+  content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7); /* semi-transparent dark layer */
+  background: rgba(0, 0, 0, 0.7);
   z-index: -1;
 }
-
 
 .terms-banner h1 {
   margin: 0;
@@ -31,7 +29,8 @@
 
 .terms-content {
   max-width: 900px;
-  
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
 .updated-date {
@@ -62,19 +61,8 @@
   line-height: 1.6;
 }
 
-.terms-content-last{
-  max-width:900px;
-  margin: 40px auto;
-  padding: 0 20px;
-  margin-bottom:200px !important;
-}
-
-@media(max-width:768px){
- 
+@media (max-width: 768px) {
   .updated-date {
-    margin-top:0px !important;
-  }
-  .terms-content-last{
-    margin-bottom:0px !important;
+    margin-top: 0px !important;
   }
 }

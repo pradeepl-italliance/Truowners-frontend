@@ -1296,3 +1296,30 @@ flex-direction: row;
   padding-top: 30px;
   padding-bottom: 100PX;
 }
+/* ===== MOBILE FIX: Feature section alignment ===== */
+@media (max-width: 768px) {
+  .res-sec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px; /* space between items */
+    padding-bottom: 50px !important;
+  }
+
+  .res-sec .feature-item {
+    width: 100%; /* full width for each feature */
+    max-width: 300px; /* optional, limit width */
+    margin: 0 auto;
+  }
+
+  .res-sec .feature-item h3 {
+    font-size: 20px; /* adjust for mobile */
+    margin-bottom: 8px;
+  }
+
+  .res-sec .feature-item p {
+    font-size: 14px; /* adjust for mobile */
+    line-height: 1.5;
+  }
+}

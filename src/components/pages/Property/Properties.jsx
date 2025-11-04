@@ -54,6 +54,7 @@ const PropertiesPage = () => {
     title: "",
     rentRange: [0, 50000],
     depositRange: [0, 100000],
+    status: ""
   });
 
   // Modal states
@@ -84,6 +85,7 @@ const PropertiesPage = () => {
         parseInt(searchParams.get("minBudget")) || 0,
         parseInt(searchParams.get("maxBudget")) || 100000,
       ],
+      status: searchParams.get("status") || "All"
     };
 
     setFilters(initialFilters);
@@ -125,6 +127,7 @@ const PropertiesPage = () => {
       if (filters.rentRange[1] < 50000) params.append("maxRent", filters.rentRange[1]);
       if (filters.depositRange[0] > 0) params.append("minBudget", filters.depositRange[0]);
       if (filters.depositRange[1] < 100000) params.append("maxBudget", filters.depositRange[1]);
+      if (filters.status) params.append("status", filters.status);
 
       // Add pagination
       params.append("page", page.toString());
@@ -257,6 +260,9 @@ const PropertiesPage = () => {
   };
 
   const handleFilterSearch = (queryString, updatedFilters) => {
+
+    console.log(updatedFilters);
+    
     // Update filters state
     const newFilters = {
       propertyType: updatedFilters.propertyType || "",
@@ -267,6 +273,7 @@ const PropertiesPage = () => {
       depositRange: updatedFilters.budgetRange || [0, 100000],
       amenities: updatedFilters.amenities || [""],
       title: updatedFilters.title || "",
+      status: updatedFilters.status || ""
     };
 
     setFilters(newFilters);
@@ -284,6 +291,7 @@ const PropertiesPage = () => {
     if (newFilters.depositRange[1] < 100000) newSearchParams.set("maxBudget", newFilters.depositRange[1]);
     if (newFilters.amenities) newSearchParams.set("amenities", newFilters.amenities);
     if (newFilters.title) newSearchParams.set("title", newFilters.title);
+    if (newFilters.status) newSearchParams.set("status", newFilters.status);
 
     setSearchParams(newSearchParams);
   };
@@ -309,6 +317,7 @@ const PropertiesPage = () => {
     title: filters.title,
     budgetRange: filters.depositRange,
     rentRange: filters.rentRange,
+    status: filters.status
   };
 
   // Get active filters for display
@@ -326,6 +335,7 @@ const PropertiesPage = () => {
     if (filters.depositRange[0] > 0 || filters.depositRange[1] < 100000) {
       active.push({ key: 'budget', label: 'Budget Range', value: `₹${filters.depositRange[0].toLocaleString()} - ₹${filters.depositRange[1].toLocaleString()}` });
     }
+    if (filters.status) active.push({ key: 'status', label: 'status', value: filters.status });
     return active;
   };
 
@@ -339,6 +349,7 @@ const PropertiesPage = () => {
       title: "",
       budgetRange: [0, 100000],
       rentRange: [0, 50000],
+      status: 0
     });
   };
 

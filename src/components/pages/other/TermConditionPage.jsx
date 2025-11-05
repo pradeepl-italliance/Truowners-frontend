@@ -109,20 +109,10 @@ const TermConditionPage = () => {
         </p>
       </section>
 
-      {/* ✅ View Button */}
-      <div className="terms-popup-btn-container">
-        <button
-          className="view-more-btn"
-          onClick={() => setShowFullTerms(!showFullTerms)}
-        >
-          {showFullTerms
-            ? "Hide Full Terms & Conditions"
-            : "View Full Terms & Conditions"}
-        </button>
-      </div>
+      
 
       {/* ✅ Full Terms and Conditions Inline */}
-      {showFullTerms && (
+    
         <section className="terms-content expanded">
           <h2>DEFINITIONS</h2>
           <p>
@@ -440,103 +430,204 @@ The Users owe TruOwner and will immediately pay TruOwner the amount of any Charg
             </li>
           </ul>
 
-          <h2>USER GENERATED CONTENT</h2>
-          <p>
-            The Site may contain user-generated content (“UGC”), which TruOwner
-            does not pre-screen and which may include opinions not representing
-            TruOwner’s own. Users retain ownership of their UGC but grant
-            TruOwner a limited license to use, display, and manage such content
-            in accordance with law.
-          </p>
+        
 
           <h2>INTELLECTUAL PROPERTY</h2>
           <p>
-            TruOwner respects Intellectual Property Rights of others and expects
-            Users to do the same. Users are solely responsible for ensuring they
-            hold rights to content submitted. TruOwner reserves the right to
-            initiate legal proceedings for any infringement.
-          </p>
 
-          <h2>OPERATIONAL HAZARDS / COMPUTER VIRUS ATTACKS</h2>
-          <p>
-            TruOwner does not warrant that its Site or software is free of
-            viruses or technical defects but will strive to maintain security.
-            TruOwner shall not be held liable for damages due to such issues.
-          </p>
+  The Site may contain user generated content ("UGC") which TruOwner does not pre-screen and which contains views that may be opinions of Users and also of experts. These views do not represent TruOwner views, opinions, beliefs, morals or values. TruOwner does not claim any ownership rights in the text, files, images including photos, videos, sounds, musical works or any UGC that the Users submit or publish on the Site. After posting any UGC on the Site, the Users continue to own the rights that the Users may have in that UGC, subject to the limited license set out here. TruOwner shall do its best to monitor, edit or remove such UGC where TruOwner considers it appropriate or necessary to do so. TruOwner does not promise that the content in or on the Site is accurate, complete or updated, that it will not offend or upset any person or that it does not infringe the Intellectual Property Rights of third parties. The Users hereby expressly acknowledge and agree that TruOwner will not be liable for the User's losses or damages (whether direct or indirect) caused by any activity undertaken by the User on the basis of any UGC.
+</p>
 
-          <h2>RENTAL AGREEMENT</h2>
-          <p>
-            Users availing rental agreement services agree that TruOwner is not
-            liable for disputes, damages, or losses between parties. Users are
-            responsible for legal compliance and costs.
-          </p>
 
-          <h2>DISCLAIMER</h2>
-          <p>
-            Information on the Site is for general guidance only and not legal or
-            financial advice. TruOwner disclaims all liabilities for errors,
-            omissions, third-party data, or loss arising from Service use.
-          </p>
+         <h2>INTELLECTUAL PROPERTY</h2>
+  <p>
+    a) TruOwner respects the Intellectual Property Rights of others and asks its Users to do the same. The User shall have the sole responsibility for the Intellectual Property ownership or right to use of any information that the Users submit via the Site and the Users may not use the Site to transmit or reproduce someone else's Intellectual Property.
+  </p>
+  <p>
+    b) The User shall be held liable for acts including but not limited to those set out below herein, for any such infringement of TruOwner Intellectual Property Rights:
+    <br />
+    i) Misrepresentation of User Information or Content as their own property.<br />
+    ii) Using the Content directly or indirectly, publicly or privately for charging brokerage from the Users.<br />
+    iii) Using the Content directly or indirectly, publicly or privately for charging brokerage from any third party.<br />
+    iv) Using the Content to display Broker-like behavior.
+  </p>
+  <p>
+    c) TruOwner reserves the right to initiate appropriate legal proceedings against any User or third party for an infringement of its Intellectual Property Rights, in accordance with Applicable Law.
+  </p>
+  <p>
+    d) The User shall not upload, post or otherwise make available on the Site, Intellectual Property without the express permission of the concerned owner and the User shall be solely liable for any damage resulting from any infringement of such Intellectual Property.
+  </p>
+  <p>
+    e) The User further accepts and agrees that TruOwner shall have Intellectual Property Rights on all information and data provided or shared by the User on the Site.
+  </p>
+          
+  <h2>OPERATIONAL HAZARDS/COMPUTER VIRUS ATTACKS</h2>
+  <ol>
+    <li>
+      TruOwner does not warrant in any manner whatsoever that the Site or any other software utilized by TruOwner for internal purposes shall at all times remain free from any harmful components and operational hazards such as Computer Virus, worms, trojans and such related components that might be a threat to the information available with TruOwner.
+    </li>
+    <li>
+      TruOwner shall endeavor to keep the Site secured against any possible bugs, viruses or other technical problems in compliance with the best practices of this industry.
+    </li>
+    <li>
+      TruOwner shall not be held liable for any damage or injury caused due to performance, failure of performance, error, omission, interruption, deletion, defect, delay in operation or transmission, Computer Virus, link failure, site crash, malfunctioning of software/hardware, unavailability of network, communications line failure, theft or destruction or unauthorized access to, alteration of, or use of information, whether resulting in whole or in part from negligence or otherwise.
+    </li>
+  </ol>
+  <h2>RENTAL AGREEMENT</h2>
+  <ol>
+    <li>
+      If and when the User chooses to avail the rental agreement services from TruOwner,
+      the User and the concerned property owner shall provide Personal Information as may
+      be required for successful completion of registering the rental agreement.
+    </li>
 
-          <h2>GRANT OF RIGHTS TO TRUOWNER FINANCE PARTNERS</h2>
-          <p>
-            By using TruOwner finance services, users authorize TruOwner to share
-            information with its finance partners for verification, marketing,
-            and product offerings, and waive NDNC restrictions for such
-            communication.
-          </p>
+    <li>
+      For the purposes of this Agreement, the User and concerned property owner undertake:
+      <ol type="i">
+        <li>
+          To not hold TruOwner liable for any dispute that may arise between them, at any time.
+        </li>
+        <li>
+          To not hold TruOwner liable for any loss or damage that either the User or the concerned
+          property holder may suffer or incur that arise, result from, or relate in any way to any
+          fraudulent, negligent act or any Prohibited Conduct by another User; to bear registration
+          or stamp duty charges on the rental agreements or any associated agreements as per Applicable
+          Law and not hold TruOwner liable for any penalty that may arise due to payment of insufficient charges.
+        </li>
+        <li>
+          To not hold TruOwner liable for any damages that they may incur as a result of sharing
+          information for registering the rental agreement.
+        </li>
+        <li>
+          To disclose additional information to third parties and/or TruOwner, as may be required
+          from time to time in order to complete the registration process.
+        </li>
+      </ol>
+    </li>
 
-          <h2>LIMITATION OF LIABILITY</h2>
-          <p>
-            TruOwner’s total aggregate liability under this Agreement shall be
-            limited to the fees paid by the user for the specific services
-            involved.
-          </p>
+    <li>
+      (Optional placeholder for a third point if you have one — remove or replace this with your actual third clause.)
+    </li>
+  </ol>
 
-          <h2>INDEMNITY</h2>
-          <p>
-            Users shall indemnify TruOwner and its affiliates against any claims,
-            losses, or damages arising from user actions, negligence, or breach
-            of these Terms.
-          </p>
 
-          <h2>REAL ESTATE REGULATORY AUTHORITY</h2>
-          <p>
-            Users are deemed aware of RERA rules. TruOwner shall not be liable
-            for listings violating RERA norms.
-          </p>
 
-          <h2>USER GRIEVANCE</h2>
-          <p>
-            Grievances may be addressed to the Grievance Officer at
-            Truowners@gmail.com, who shall respond within one month.
-          </p>
+        
+  <h2>DISCLAIMER</h2>
+  <p>(i) The information and opinions available on the Site in relation to the Services are mere guidelines for the purposes of providing general information on the subject and the exchange of property and any other information through or on the Site is not an offer and/or recommendation from/by TruOwner.</p>
+  <p>(ii) The Content should not be regarded as legal, financial or real estate advice for the user. TruOwner advises the User to make independent enquiries and obtain professional advice before making legal, financial or real estate decisions. The measurements, prices and locations provided on the Site are approximate and no responsibility is taken by TruOwner for any error, omission or misunderstanding in construing those particulars.</p>
+  <p>(iii) The Services are chosen and used at the User's risk and discretion and TruOwner makes no representations or warranties, express or implied, to the User in relation to the Services or otherwise regarding this Agreement, including the implied warranties of merchantability and fitness for a particular purpose.</p>
+  <p>(iv) The User understands and acknowledges that the User assumes certain risks prior to interacting with other Users/persons/Third Party Service Providers on and through the Site, and the User shall be solely responsible for such User's personal assessment of specific requirements with regard to interaction with other Users/persons/Third-Party Service Providers.</p>
+  <p>(v) TruOwner expressly disclaims any liability or responsibility whatsoever and howsoever arising as a result of any Content/listing posted on the Site/made available to TruOwner by any User or any third party or any deficiency in service that is caused to the User due to a Third-party service provider.</p>
+  <p>(vi) TruOwner does not warrant the Services or the results obtained from the use or that the Services will meet the User's expectations or requirements or that the Site will be uninterrupted or free from any technical error.</p>
+  <p>(vii) TruOwner is not responsible for the accuracy or reliability of any third-party reports, market information, studies and analysis made available on the Site and any external web links mentioned on the Site.</p>
+  <p>(viii) TruOwner does not have the obligation to physically meet, conduct background or police verification of the Users. The terms "genuine verified owner" and "genuine verified tenants/buyers" on the Site refer to TruOwner algorithm-based technological process by which Brokers are prohibited from accessing the Site and availing the Services. This is on a best-effort basis and has its own limitations. TruOwner accepts User information in good faith and shall not be held responsible with regard to the bonafides of the users.</p>
+  <p>(ix) TruOwner shall not be liable for any damages, expenses, costs or losses incurring from the User's engagement in Prohibited Conduct and availing services of Third-Party Service Providers.</p>
+  <p>(x) TruOwner shall not be held liable or responsible for indemnifying, refunding or reimbursing any User for any loss, damages or expenses suffered or incurred by such User as a consequence of the suspension or deactivation of the User's Account.</p>
+  <p>(xi) TruOwner shall not be liable for any third party fees, costs, charges or expenses incurred by the user for accessing the site or availing the Services. TruOwner shall not be liable in respect of any disputes or legal proceedings between the User and such third party for any reason whatsoever and any such disputes or proceedings shall be resolved outside the Site without any reference or recourse to TruOwner.</p>
+  <p>(xii) TruOwner neither has access to, nor does the Agreement govern the use of cookies or other tracking technologies that may be placed by Third Party Service Providers on the site. These parties may permit the User to opt out of tailored advertisement at any time, however, to the extent advertising technology is integrated into the Services, the user may still receive advertisements and related updates even if they choose to opt-out of tailored advertising. TruOwner assumes no responsibility or liability whatsoever for the users receipt or use of such tailored advertisements.</p>
+  <p>(xiii) TruOwner shall not be liable for the non-performance or defective or late performance of any of the Services or any of its obligations under this Agreement to such extent and for such period of time if such non-performance, defective performance or late performance is due to acts of God, war (declared or undeclared), civil insurrection or unrest, acts (including failure to act) of any Governmental Authority, riots, revolutions, fire, floods, strikes, lock-outs or industrial action.</p>
 
-          <h2>GUIDELINES FOR LAW ENFORCEMENT AGENCIES / REPORT A FRAUD</h2>
-          <p>
-            Legal requests can be sent to Truowners@gmail.com or contact
-            +8867721812. TruOwner aims to respond within 72 hours.
-          </p>
+  <h2>GRANT OF RIGHTS TO TRUOWNER FINANCE PARTNERS</h2>
+  <p>1. Notwithstanding anything contained herein and in TruOwner Privacy Policy, the User authorizes TruOwner to share with its finance partners, any and all information that the User may provide in relation to the use of the Site for availing the products and/or service of TruOwner finance partners.</p>
+  
+  <p>2. By clicking on the "Apply Now/Submit" tab:</p>
+  <p>&nbsp;&nbsp;(i) The User agrees and authorizes TruOwner finance partners to contact the User and communicate with the user over emails, telephonic calls, or SMS on the mobile number mentioned on the site, or through any other communication mode, to verify the details provided by the User on the site or to verify the information provided by the user during registration on the site.</p>
+  <p>&nbsp;&nbsp;(ii) The user confirms that the user would like to know through the above-mentioned communication modes, about the various offers and promotion schemes relating to various products/services offered by TruOwner finance partners/its group companies, from time to time.</p>
+  <p>&nbsp;&nbsp;(iii) The user further agrees and confirms that the laws in relation to the unsolicited communication referred to in the "National Do Not Call Registry" (the "NDNC Registry") as laid down by the Telecom Regulatory Authority of India will not be applicable for such communication/calls/SMS received from TruOwner finance partners, its group companies, employees, representatives and/or agents.</p>
+  <p>&nbsp;&nbsp;(iv) The user authorizes TruOwner finance partners to exchange and share all information and details, as provided by the User on the Site, with third parties, including but not limited to TruOwner finance partners' group companies, service providers, financial institutions, credit bureaus, telecommunication companies, statutory bodies, etc., for customer verification, personalization of products or services, credit rating, data enrichment, marketing or promotion of services or related products of TruOwner finance partners or that of its associates and affiliates or for enforcement of the User's obligations in this regard, the User agrees that it shall not hold TruOwner finance partners (or any of its group companies or its/their employees/agents/representatives) liable for using/sharing of the information as stated above.</p>
+  <p>&nbsp;&nbsp;(v) The user understands and agrees that pursuant to this application form, the user will be required to submit documents to the satisfaction of TruOwner finance partners and accept the loan terms and conditions as prescribed by TruOwner finance partners in relation to the products and/or service applied by the user.</p>
 
-          <h2>WAIVER AND SEVERABILITY</h2>
-          <p>
-            No failure to enforce rights constitutes waiver. If any term is
-            deemed invalid, the remainder remains enforceable.
-          </p>
+  <p>"I, as a subscriber/user of the services offered through the web portal TruOwner.com do hereby expressly authorize any of their business associates to call/SMS my/our registered phone numbers (as provided by me/us to TruOwner.in). I hereby expressly state that such authorization shall override the national Do-Not-Disturb Registry ("DND"), even if the phone numbers in question are registered under DND list of national Consumer preference registry (NCPR/NDNC). I/we also undertake that We will not make any complaints to NDNC for any calls received from TruOwner in services/products, and shall indemnify TruOwner and any of its business associates for having engaged in any such practice. I realize, acknowledge and expressly authorize TruOwner.in to make the initial communication (via Call/SMS/E-mail/WhatsApp) for the purposes of confirmation of my credentials provided by me. I hereby authorize TruOwner.in and its business associates to continue contacting me via any of the modes of communication listed above, till such time as I expressly opt-out/unsubscribe from the service offered by TruOwner.in. Till such time, TruOwner.in and its business associates shall have all rights to continue communicating with me and I shall completely indemnify them against any liability that may arise as a result of such authorization to communicate. Such indemnification shall extend to court cases and suits and all lawyer/advocate fees, even if the dispute is never subjected to judicial scrutiny."</p>
 
-          <h2>AMENDMENTS</h2>
-          <p>
-            TruOwner may modify this Agreement without prior notice. Continued
-            use of the site indicates acceptance of changes.
-          </p>
 
-          <h2>GOVERNING LAW AND JURISDICTION</h2>
-          <p>
-            This Agreement is governed by Indian law, and disputes shall be
-            subject to the jurisdiction of Bengaluru courts.
-          </p>
+
+  <h2>LIMITATION OF LIABILITY</h2>
+  <p>1. TruOwner's total aggregate liability under this Agreement and in relation to anything which TruOwner has done or not done in relation with this Agreement shall be limited to the fees paid by the User for availing the Services in relation to which such liability of TruOwner arises.</p>
+
+
+
+  <h2>INDEMNITY</h2>
+  <p>1. TruOwner and its officers, directors, employees and agents collectively at all times shall be held indemnified against any losses, costs, expenses, claims, suits and/or damages (including reasonable attorney fees) incurred and/or suffered by TruOwner, whether directly or indirectly, resulting from an act or a failure to act, of any User, person or Third-Party Service Provider for any reason whatsoever and against any claims, suits and/or legal proceedings initiated by third parties inclusive of but not limited to the User's:</p>
+  <ol type="i">
+    <li>Breach of any terms of this Agreement;</li>
+    <li>Third party claims arising from an infringement or alleged infringement of such third party's Intellectual Property;</li>
+    <li>Claims made by any Government Authority due to the user's violation of Applicable Law;</li>
+    <li>Actual or alleged gross negligence or willful misconduct in connection with the User's use of the Services or this Agreement;</li>
+    <li>A fraudulent act committed by a User which results in loss or damage, suffered or incurred by any other User or by any third party.</li>
+  </ol>
+
+
+          
+  <h2>REAL ESTATE REGULATORY AUTHORITY (RERA)</h2>
+  <ol>
+    <li>
+      For the purposes of this Agreement and Services related thereto, it shall be deemed that the Users are aware about the rules and regulations in relation to the Real Estate Regulatory Authority (RERA) of the concerned state in India. TruOwner recommends that the Users periodically visit the concerned RERA website for updates and information in relation to any property listed on the Site, prior to finalizing any deal or transaction.
+    </li>
+    <li>
+      TruOwner does not endorse or advertise any property listed on the Site and it shall not be held liable for listing any property on its Site where such property is in violation of the rules made under RERA of the concerned state. Further, it shall not be deemed by the Users that TruOwner has any connection or relation with the parties listing their properties on the Site.
+    </li>
+  </ol>
+
+
+  <h2>USER GRIEVANCE</h2>
+  <p>
+    Any User grievance relating to the discrepancies or misuse of information provided to TruOwner may be addressed to the grievance officer, whose details are provided below:
+  </p>
+  <ul>
+    <li><strong>Name:</strong> [Insert Name]</li>
+    <li><strong>Designation:</strong> Perpendicular Head</li>
+    <li><strong>Email ID:</strong> Truowners@gmail.com</li>
+  </ul>
+  <p>
+    The grievance officer shall address the grievance within one month of the date of receipt of such grievance from the User.
+  </p>
+
+
+
+          <section className="terms-content">
+  <h2>GUIDELINES FOR LAW ENFORCEMENT AGENCIES (LEAS) / REPORT A FRAUD</h2>
+  <p>
+    The LEAs can send legal requests or notices to us at <strong>Truowners@gmail.com</strong> for assistance required on user details. 
+    Additionally, in case of any query, you can also call our Customer Helpline Number <strong>+8867721812</strong>, available all 7 days a week, between 9:30 AM to 7:00 PM. 
+    We will try to respond within 72 hours of receiving the request.
+  </p>
+</section>
+
+  <h2>WAIVER AND SEVERABILITY</h2>
+  <ol>
+    <li>No failure or delay on the part of TruOwners in exercising any right or remedy shall operate as a waiver of such right or remedy.</li>
+    <li>In the event that any of the terms and conditions of the Agreement are declared as invalid or unenforceable by a court of competent jurisdiction, such enforceability or invalidity shall not render the other terms and conditions invalid or unenforceable as a whole.</li>
+    <li>The invalid or unenforceable provision shall be construed to reasonably reflect the actual intention of the party (in this case, TruOwners) while drafting it.</li>
+  </ol>
+
+
+  <h2>AMENDMENTS</h2>
+  <ol>
+    <li>
+      TruOwners shall change, update, or modify this Agreement, in whole or in part, without any prior notice to the User; 
+      provided, however, that a notification of such change, updating, or modification will be made available on the site.
+    </li>
+    <li>
+      The User's uninterrupted and continued usage of the Services and the site shall be deemed as acknowledgment 
+      and acceptance of the changes, updates, or modifications to the Agreement.
+    </li>
+  </ol>
+
+
+        
+  <h2>GOVERNING LAW AND JURISDICTION</h2>
+  <p>
+    Any action, claim, dispute, or difference arising out of or in connection with this Agreement, including any question 
+    regarding its existence, validity, or termination (Dispute), shall be governed by and construed in accordance with the 
+    laws of India, and the courts in Bengaluru shall have exclusive jurisdiction over Disputes arising out of this Agreement. 
+    Notwithstanding anything contained herein, TruOwners shall not be restricted or withheld from instituting proceedings 
+    in courts/tribunals of any jurisdiction other than Bengaluru that it may, in its sole discretion, deem appropriate and convenient.
+  </p>
+
+
         </section>
-      )}
+     
     </div>
   );
 };

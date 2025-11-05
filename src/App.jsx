@@ -5,6 +5,7 @@ import { AdminAuthProvider } from './context/AdminAuthContext'
 import Layout from './components/common/Layout/Layout'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import HomePage from './components/pages/Home/HomePage'
+import NewHomePage from './components/pages/Home/NewHomePage'
 import OwnerDashboard from './components/pages/Owner/OwnerDashboard'
 import AdminDashboard from './components/pages/Admin/AdminDashboard'
 import SecretAdminAccess from './components/pages/Admin/SecretAdminAccess'
@@ -15,12 +16,13 @@ import AboutPage from './components/pages/other/AboutPage'
 import TermsAndConditions from './components/pages/other/TermConditionPage'
 import PrivacyPolicy from './components/pages/other/PrivacyPolicyPage'
 import FaqPage from './components/pages/other/FaqPage'
+import MyBookings from './components/pages/bookings/MyBookings'
+import PropertiesPage from './components/pages/Property/Properties'
+import SubscriptionPlans from './components/pages/other/SubscriptionPlans'
+import ScrollToTop from './components/common/ScrollToTop';
+
 import './styles/globals.css'
 import './styles/components.css'
-import ScrollToTop from './components/common/ScrollToTop';
-import MyBookings from './components/pages/bookings/MyBookings'
-import NewHomePage from './components/pages/Home/NewHomePage'
-import PropertiesPage from './components/pages/Property/Properties'
 
 function AppContent() {
   const { user, isAuthenticated } = useAuth()
@@ -40,7 +42,6 @@ function AppContent() {
   return (
     <Layout>
       <ErrorBoundary>
-        {/* <HomePage /> */}
         <NewHomePage />
         <HomePage />
       </ErrorBoundary>
@@ -63,7 +64,7 @@ function App() {
       <AuthProvider>
         <AdminAuthProvider>
           <Router>
-          <ScrollToTop />
+            <ScrollToTop />
             <Routes>
               {/* Main App Route */}
               <Route path="/" element={<AppContent />} />
@@ -76,10 +77,13 @@ function App() {
               <Route path="/faq" element={<LayoutWrapper><FaqPage /></LayoutWrapper>} />
               <Route path="/properties" element={<LayoutWrapper><PropertiesPage /></LayoutWrapper>} />
 
+              {/* Subscription Plans Page */}
+              <Route path="/subscription-plans" element={<LayoutWrapper><SubscriptionPlans /></LayoutWrapper>} />
+
               {/* Property & User Pages */}
               <Route path="/property/:id" element={<LayoutWrapper><PropertyDetailsPage /></LayoutWrapper>} />
               <Route path="/wishlist" element={<LayoutWrapper><WishlistPage /></LayoutWrapper>} />
-              <Route path="/my-bookings" element={<LayoutWrapper><MyBookings /></LayoutWrapper>}/>
+              <Route path="/my-bookings" element={<LayoutWrapper><MyBookings /></LayoutWrapper>} />
 
               {/* Admin Routes */}
               <Route 

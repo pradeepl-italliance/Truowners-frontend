@@ -1,0 +1,100 @@
+.subscription-section {
+  padding: 80px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.overview {
+  max-width: 750px;
+  margin: 0 auto 60px auto;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.section-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.plans-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px; /* generous spacing between cards */
+}
+
+.plan-card {
+  width: 320px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  border: 1px solid #ddd; /* subtle card border added */
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+}
+
+.plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.plan-header {
+  padding: 25px 20px 15px 20px;
+  text-align: center;
+}
+
+.plan-name {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.plan-price {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.gst {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #555;
+}
+
+.plan-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-includes,
+.plan-validity {
+  font-size: 1rem;
+  color: #333;
+}
+
+.subscribe-button {
+  margin-top: auto;
+  padding: 14px 0;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.subscribe-button:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+}

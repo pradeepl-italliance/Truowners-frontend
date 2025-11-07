@@ -1,19 +1,16 @@
 // SubscriptionTab.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Box, Typography, TextField, Paper, Chip, CircularProgress, Alert,
+  Box, Typography, TextField, Paper, Chip, CircularProgress,
   InputAdornment, TablePagination, IconButton, Tooltip, Stack, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow, Fade,
-  useTheme, alpha
+  MenuItem, useTheme, alpha
 } from '@mui/material';
-import {
-  Search as SearchIcon,
-  Refresh as RefreshIcon
-} from '@mui/icons-material';
+import { Search as SearchIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-// Replace this with your API config when ready
+// Sample front-end only data
 const sampleSubscriptions = [
   { id:1, name:'John Doe', email:'john@example.com', plan:'Gold', status:'Active', expiry:'2025-12-31' },
   { id:2, name:'Jane Smith', email:'jane@example.com', plan:'Silver', status:'Expired', expiry:'2024-05-15' },
@@ -23,47 +20,30 @@ const sampleSubscriptions = [
 export default function SubscriptionTab() {
   const theme = useTheme();
 
-  /* ---------------- state ---------------- */
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  /* filters */
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('');
   const [planType, setPlanType] = useState('');
-  const [expiryFrom, setExpiryFrom] = useState(null);
-  const [expiryTo, setExpiryTo] = useState(null);
+  const [validTill, setValidTill] = useState(null); // Single date picker
 
-  /* pagination */
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  /* --------------- fetch ----------------- */
-  const fetchSubscriptions = async () => {
-    try {
-      setRefreshing(true);
-      // Replace this with your API call
-      // const token = localStorage.getItem('adminToken');
-      // const res  = await fetch(buildApiUrl(API_CONFIG.ADMIN.SUBSCRIPTIONS), { headers: { Authorization: `Bearer ${token}` } });
-      // const json = await res.json();
-      // if(!json.success) throw new Error(json.error || 'Fetch failed');
-      // setSubscriptions(json.data.subscriptions || []);
-      setSubscriptions(sampleSubscriptions); // sample data
-      setError(null);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to fetch subscriptions');
-    } finally {
+  const fetchSubscriptions = () => {
+    setRefreshing(true);
+    setLoading(true);
+    setTimeout(() => {
+      setSubscriptions(sampleSubscriptions);
       setLoading(false);
       setRefreshing(false);
-    }
+    }, 500);
   };
 
   useEffect(() => { fetchSubscriptions(); }, []);
 
-  /* ------------- filtering --------------- */
   const filtered = useMemo(() => {
     return subscriptions.filter(sub => {
       const q = query.toLowerCase();
@@ -71,29 +51,24 @@ export default function SubscriptionTab() {
       const matchesStatus = status ? sub.status === status : true;
       const matchesPlan = planType ? sub.plan === planType : true;
       const subDate = new Date(sub.expiry);
-      const matchesFrom = expiryFrom ? subDate >= expiryFrom : true;
-      const matchesTo = expiryTo ? subDate <= expiryTo : true;
-      return matchesQuery && matchesStatus && matchesPlan && matchesFrom && matchesTo;
+      const matchesValidTill = validTill ? subDate <= validTill : true;
+      return matchesQuery && matchesStatus && matchesPlan && matchesValidTill;
     });
-  }, [subscriptions, query, status, planType, expiryFrom, expiryTo]);
+  }, [subscriptions, query, status, planType, validTill]);
 
-  /* ------------- pagination -------------- */
   const paginated = useMemo(() => {
     return filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [filtered, page, rowsPerPage]);
 
-  /* --------------- render ---------------- */
   if (loading) return (
     <Box display="flex" justifyContent="center" py={5}>
       <CircularProgress size={32} />
     </Box>
   );
 
-  if (error) return <Alert severity="error">{error}</Alert>;
-
   return (
     <Box>
-      {/* header */}
+      {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" sx={{ fontWeight:700 }}>
           Subscription Plans
@@ -112,9 +87,9 @@ export default function SubscriptionTab() {
         </Tooltip>
       </Box>
 
-      {/* filters */}
+      {/* Filters */}
       <Paper sx={{ p:2, mb:3 }}>
-        <Stack direction={{ xs:'column', sm:'row' }} spacing={2}>
+        <Stack direction={{ xs:'column', sm:'row' }} spacing={2} flexWrap="wrap" justifyContent="flex-start">
           <TextField
             label="Name / Email"
             variant="outlined"
@@ -127,27 +102,15 @@ export default function SubscriptionTab() {
                 </InputAdornment>
               )
             }}
-            fullWidth
+            sx={{ minWidth: 200, flex: 2 }}
           />
-          <TextField
-            select
-            label="Status"
-            value={status}
-            onChange={e => setStatus(e.target.value)}
-            fullWidth
-          >
+          <TextField select label="Status" value={status} onChange={e => setStatus(e.target.value)} sx={{ minWidth: 140, flex: 1.3 }}>
             <MenuItem value="">All</MenuItem>
             <MenuItem value="Active">Active</MenuItem>
             <MenuItem value="Expired">Expired</MenuItem>
             <MenuItem value="Pending">Pending</MenuItem>
           </TextField>
-          <TextField
-            select
-            label="Plan Type"
-            value={planType}
-            onChange={e => setPlanType(e.target.value)}
-            fullWidth
-          >
+          <TextField select label="Plan Type" value={planType} onChange={e => setPlanType(e.target.value)} sx={{ minWidth: 140, flex: 1.3 }}>
             <MenuItem value="">All</MenuItem>
             <MenuItem value="Gold">Gold</MenuItem>
             <MenuItem value="Silver">Silver</MenuItem>
@@ -155,32 +118,17 @@ export default function SubscriptionTab() {
           </TextField>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              label="Expiry From"
-              value={expiryFrom}
-              onChange={(newVal) => setExpiryFrom(newVal)}
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Expiry To"
-              value={expiryTo}
-              onChange={(newVal) => setExpiryTo(newVal)}
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              label="Valid Till"
+              value={validTill}
+              onChange={setValidTill}
+              renderInput={(params) => <TextField {...params} sx={{ minWidth: 140, flex: 1.5 }} />}
             />
           </LocalizationProvider>
         </Stack>
       </Paper>
 
-      {/* table */}
-      <Paper
-        elevation={0}
-        sx={{
-          border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
-          borderRadius:2,
-          overflow:'hidden'
-        }}
-      >
+      {/* Table */}
+      <Paper elevation={0} sx={{ border: `1px solid ${alpha(theme.palette.divider, 0.12)}`, borderRadius:2, overflow:'hidden' }}>
         <TableContainer sx={{ maxHeight:560 }}>
           <Table stickyHeader size="small">
             <TableHead>
@@ -189,10 +137,9 @@ export default function SubscriptionTab() {
                 <TableCell>Email</TableCell>
                 <TableCell>Plan Type</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Expiry Date</TableCell>
+                <TableCell sx={{ textAlign: 'right' }}>Expiry Date</TableCell>
               </TableRow>
             </TableHead>
-
             <TableBody>
               {paginated.map(sub => (
                 <Fade in key={sub.id}>
@@ -200,16 +147,23 @@ export default function SubscriptionTab() {
                     <TableCell>{sub.name}</TableCell>
                     <TableCell>{sub.email}</TableCell>
                     <TableCell>
-                      <Chip label={sub.plan} color={sub.plan==='Gold' ? 'warning' : sub.plan==='Silver' ? 'info' : 'secondary'} size="small"/>
+                      <Chip 
+                        label={sub.plan} 
+                        color={sub.plan==='Gold' ? 'warning' : sub.plan==='Silver' ? 'info' : 'secondary'} 
+                        size="small"
+                      />
                     </TableCell>
-                    <TableCell>
-                      <Chip label={sub.status} color={sub.status==='Active' ? 'success' : sub.status==='Expired' ? 'error' : 'warning'} size="small"/>
+                    <TableCell sx={{ pr: 0 }}>
+                      <Chip 
+                        label={sub.status} 
+                        color={sub.status==='Active' ? 'success' : sub.status==='Expired' ? 'error' : 'warning'} 
+                        size="small"
+                      />
                     </TableCell>
-                    <TableCell>{sub.expiry}</TableCell>
+                    <TableCell sx={{ textAlign:'right' }}>{sub.expiry}</TableCell>
                   </TableRow>
                 </Fade>
               ))}
-
               {paginated.length===0 && (
                 <TableRow>
                   <TableCell colSpan={5}>

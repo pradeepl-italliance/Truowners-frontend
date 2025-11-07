@@ -11,7 +11,7 @@ import {
   People as PeopleIcon,
   Home as HomeIcon,
   BookOnline as BookingsIcon,
-  Subscriptions as SubscriptionIcon, 
+  CardMembership as SubscriptionIcon,
   Logout as LogoutIcon,
   MoreVert as MoreVertIcon,
   Menu as MenuIcon
@@ -24,7 +24,6 @@ import PropertiesTab from './PropertiesTab';
 import BookingsTab from './BookingsTab';
 import SubscriptionTab from './SubscriptionTab';
 
-// Nav items — order matters!
 const navItems = [
   { label: 'Dashboard', icon: <DashboardIcon /> },
   { label: 'Users', icon: <PeopleIcon /> },
@@ -84,14 +83,15 @@ export default function AdminDashboard() {
       >
         <Box sx={{ mt: 1 }}>
           {navItems.map((item, idx) => (
-            <Tab
+            <MenuItem
               key={item.label}
-              icon={item.icon}
-              label={item.label}
-              iconPosition="start"
               onClick={() => { setTab(idx); setDrawerOpen(false); }}
-              sx={{ justifyContent: 'flex-start', textTransform: 'none', px: 3 }}
-            />
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {item.icon}
+                <Typography sx={{ ml: 1 }}>{item.label}</Typography>
+              </Box>
+            </MenuItem>
           ))}
         </Box>
         <Divider />
@@ -108,23 +108,28 @@ export default function AdminDashboard() {
         <Tabs
           value={tab}
           onChange={(_e, newVal) => setTab(newVal)}
-          variant="scrollable"          // <-- Changed from fullWidth
-          scrollButtons="auto"          // <-- Added scroll buttons
+          variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"
         >
           {navItems.map(item => (
-            <Tab key={item.label} icon={item.icon} iconPosition="start" label={item.label} />
+            <Tab
+              key={item.label}
+              icon={item.icon}
+              iconPosition="start"
+              label={item.label}
+              sx={{ textTransform: 'none', flex: 1 }}
+            />
           ))}
         </Tabs>
       )}
 
       {/* Main content */}
       <Box component="main" flex={1} overflow="auto" px={{ xs: 1, md: 3 }} py={3}>
-        {tab === 0 && <AnalyticsOverview />}
-        {tab === 1 && <UsersTab />}
-        {tab === 2 && <PropertiesTab />}
-        {tab === 3 && <BookingsTab />}
+        {tab === 0 && <AnalyticsOverview fallback />}
+        {tab === 1 && <UsersTab fallback />}
+        {tab === 2 && <PropertiesTab fallback />}
+        {tab === 3 && <BookingsTab fallback />}
         {tab === 4 && <SubscriptionTab />}
       </Box>
 
@@ -141,6 +146,7 @@ export default function AdminDashboard() {
                 key={item.label}
                 label={item.label}
                 icon={item.icon}
+                sx={{ flex: 1 }}
               />
             ))}
           </BottomNavigation>

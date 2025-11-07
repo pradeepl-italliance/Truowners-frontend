@@ -3,6 +3,7 @@
   color: #333;
 }
 
+
 .terms-banner {
   position: relative;
   background-image: url('/src/assets/images/homebanner.jpg');
@@ -13,6 +14,7 @@
   padding: 100px 20px;
   text-align: center;
   z-index: 1;
+  width:100%;
 }
 
 .terms-banner::before{
@@ -23,11 +25,11 @@
   z-index: -1;
 }
 
-
 .terms-banner h1 {
   margin: 0;
   font-size: 3rem;
 }
+
 
 .terms-content {
   max-width: 900px;

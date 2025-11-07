@@ -324,15 +324,16 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
     });
   };
 
- const handleSearchClick = () => {
+const handleSearchClick = () => {
   const params = new URLSearchParams();
 
-  // Use statusTab directly instead of filters.status
+  // Determine status based on selected tab
   const statusValue =
     statusTab === 0 ? "All" :
     statusTab === 1 ? "Rent" :
     statusTab === 2 ? "Sale" :
-    "Lease";
+    statusTab === 3 ? "Lease" :
+    "Commercial";
 
   params.append("status", statusValue);
 
@@ -344,8 +345,12 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
   if (filters.title) params.append("title", filters.title);
   if (filters.budgetRange[0] > 0) params.append("minBudget", filters.budgetRange[0]);
   if (filters.budgetRange[1] < 100000) params.append("maxBudget", filters.budgetRange[1]);
-  if (filters.rentRange[0] > 0) params.append("minRent", filters.rentRange[0]);
-  if (filters.rentRange[1] < 50000) params.append("maxRent", filters.rentRange[1]);
+  if ((statusValue === "Rent" || statusValue === "Commercial") && filters.rentRange[0] > 0) {
+    params.append("minRent", filters.rentRange[0]);
+  }
+  if ((statusValue === "Rent" || statusValue === "Commercial") && filters.rentRange[1] < 50000) {
+    params.append("maxRent", filters.rentRange[1]);
+  }
 
   lastSearchRef.current = filters.search;
 
@@ -452,6 +457,8 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
           <StyledTab label="FOR RENT" />
           <StyledTab label="FOR SALE" />
           <StyledTab label="FOR LEASE" />
+          <StyledTab label="FOR COMMERCIAL" />
+
         </StyledTabs>
       </Box>
 
@@ -596,7 +603,7 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
 
           <Grid item xs={12} md={5} maxWidth={"350px"}>
            
-            {((statusTab != 2) && (statusTab != 3) ) && <>
+            {(statusTab === 1 || statusTab === 4) && <>
             <SectionLabel>
               <AttachMoneyIcon sx={{ fontSize: 16 }} />
               RENT RANGE

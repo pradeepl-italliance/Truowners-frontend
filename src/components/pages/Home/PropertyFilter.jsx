@@ -285,7 +285,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
             InputProps={{
               startAdornment: <InputAdornment position="start">₹</InputAdornment>,
             }}
-            placeholder={"MAX PRICE"}
+                placeholder={"MAX PRICE"}
           />
         </Grid>
 

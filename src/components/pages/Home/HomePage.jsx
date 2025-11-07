@@ -29,18 +29,14 @@ import truOwnersLogo from '../../../assets/images/logo-Copy.jpg';
 import icon1 from '../../../assets/images/Icon(1).png';
 import icon2 from '../../../assets/images/Icon(2).png';
 import icon3 from '../../../assets/images/Icon(3).png';
-
-
 // import Button from '@mui/material/Button';
 // import AddAlertIcon from '@mui/icons-material/AddAlert';
 // import AccountCircleSharp from '@mui/icons-material/AccountCircleSharp';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 // import { useEffect, useRef, useState } from "react";
 // import React, { useState, useEffect, useRef } from "react";
-
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import per2 from '../../../assets/images/2.png';
@@ -48,19 +44,10 @@ import per1 from '../../../assets/images/1.png';
 import per3 from '../../../assets/images/3.png';
 import per4 from '../../../assets/images/4.png';
 import per5 from '../../../assets/images/5.png';
-
-
-
-
-
-
-
 const Counter = ({ target, label }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-
-  // Detect when the counter is in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -73,15 +60,12 @@ const Counter = ({ target, label }) => {
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
-
-  // Animate counter when visible
   useEffect(() => {
     if (isVisible) {
       let start = 0;
       const end = target;
       const duration = 2000; // ms
       const increment = end / (duration / 16);
-
       const timer = setInterval(() => {
         start += increment;
         if (start >= end) {
@@ -92,7 +76,6 @@ const Counter = ({ target, label }) => {
       }, 16);
     }
   }, [isVisible, target]);
-
   return (
     <div className="counter-item" ref={ref}>
       <h2 className="counter-number">{count}</h2>
@@ -100,15 +83,6 @@ const Counter = ({ target, label }) => {
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
 const properties = [
   { title: "Villa", count: 28, img: "/villa.jpg" },
   { title: "Apartment", count: 12, img: "/apartment.jpg" },
@@ -118,11 +92,6 @@ const properties = [
   { title: "Office", count: 32, img: "/office.jpg" },
   { title: "Shop", count: 18, img: "/shop.jpg" },
 ];
-
-
-
-
-
 const testimonials = [
   {
     name: 'Rahul Mehta',
@@ -155,12 +124,7 @@ const testimonials = [
     image: per4,
   },
 ];
-
-
-
 const HomePage = () => {
-
-
   const sliderSettings = {
     dots: true,           // show navigation dots
     infinite: true,       // loop slides
@@ -175,20 +139,11 @@ const HomePage = () => {
       { breakpoint: 640, settings: { slidesToShow: 1 } },
     ]
   };
-
-
-
-  // const [location, setLocation] = useState("");
-
   const [activeTab, setActiveTab] = useState("Rent");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
   const navigate = useNavigate();
-
-  const tabs = ["Rent", "Buy", "Sell"];
-
-
-
+  const tabs = ["Rent", "Buy", "Sell", "Commercial"];
   const [showAll, setShowAll] = useState(false);
   const [properties, setProperties] = useState([])
   const [filteredProperties, setFilteredProperties] = useState([])
@@ -214,24 +169,20 @@ const HomePage = () => {
     minArea: '',
     maxArea: ''
   });
-
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('newest')
   const { user, isAuthenticated, token } = useAuth()
-
   useEffect(() => {
     fetchProperties()
     if (isAuthenticated) {
       fetchWishlist()
     }
   }, [isAuthenticated])
-
   useEffect(() => {
     console.log('Total properties from API:', properties.length);
     console.log('Filtered properties:', filteredProperties.length);
     console.log('Properties data:', properties);
   }, [properties, filteredProperties]);
-
   useEffect(() => {
     if (isAuthenticated) {
       const propertyToView = localStorage.getItem('propertyToView')
@@ -242,30 +193,23 @@ const HomePage = () => {
       }
     }
   }, [isAuthenticated, properties])
-
   useEffect(() => {
     applyFilters()
   }, [properties, filters, searchTerm, sortBy])
-
   const fetchProperties = async () => {
     setLoading(true)
     setError('')
-
     try {
       const headers = {
         'Content-Type': 'application/json'
       }
-
-      // Add auth header if user is logged in
       if (isAuthenticated && token) {
         headers['Authorization'] = `Bearer ${token}`
       }
-
       const response = await fetch(buildApiUrl(API_CONFIG.USER.PROPERTIES), {
         method: 'GET',
         headers
       })
-
       let data
       try {
         data = await response.json()
@@ -273,11 +217,9 @@ const HomePage = () => {
       } catch (parseError) {
         throw new Error('Invalid response from server')
       }
-
       if (!response.ok) {
         throw new Error(data.error || handleApiError(null, response))
       }
-
       if (data.success) {
         setProperties(data.data.properties || [])
       } else {
@@ -290,7 +232,16 @@ const HomePage = () => {
       setLoading(false)
     }
   }
+const handleSearch = () => {
+  console.log("Property Type:", filters.propertyType);
+  console.log("Bedrooms:", filters.bedrooms);
+  console.log("Type:", activeTab); // ✅ This is what you were missing
 
+  // Navigate to properties page with query params
+  navigate(
+    `/properties?propertyType=${filters.propertyType}&bedrooms=${filters.bedrooms}&listingType=${activeTab}`
+  );
+};
   const fetchWishlist = async () => {
     if (!isAuthenticated || !token) return
 
@@ -302,7 +253,6 @@ const HomePage = () => {
           'Authorization': `Bearer ${token}`
         }
       })
-
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -313,17 +263,14 @@ const HomePage = () => {
       console.warn('Failed to fetch wishlist:', err)
     }
   }
-
   const handleWishlistToggle = async (propertyId) => {
     if (!isAuthenticated) {
       setShowAuthPrompt(true)
       return
     }
-
     try {
       const isInWishlist = wishlist.includes(propertyId)
       const method = isInWishlist ? 'DELETE' : 'POST'
-
       const response = await fetch(buildApiUrl(`${API_CONFIG.USER.WISHLIST}/${propertyId}`), {
         method,
         headers: {
@@ -331,7 +278,6 @@ const HomePage = () => {
           'Authorization': `Bearer ${token}`
         }
       })
-
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -346,39 +292,32 @@ const HomePage = () => {
       console.error('Wishlist toggle error:', err)
     }
   }
-
   const handlePropertyClick = (property) => {
     setSelectedProperty(property)
     setShowPropertyDetails(true)
   }
-
   // NEW: Handle login requirement for view details
   const handleLoginRequired = () => {
     setShowLogin(true)
   }
-
   // NEW: Handle successful login
   const handleAuthSuccess = () => {
     setShowLogin(false)
     setShowRegister(false)
     setShowAuthPrompt(false)
   }
-
   // NEW: Switch between login and register
   const handleSwitchToRegister = () => {
     setShowLogin(false)
     setShowRegister(true)
   }
-
   const handleSwitchToLogin = () => {
     setShowRegister(false)
     setShowLogin(true)
   }
-
   // Update the applyFilters function in HomePage.jsx
   const applyFilters = () => {
     let filtered = [...properties];
-
     // Search term filter - searches in title, description, and location
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
@@ -388,11 +327,9 @@ const HomePage = () => {
         const locationMatch = getLocationString(property.location).toLowerCase().includes(searchLower);
         const cityMatch = property.location?.city?.toLowerCase().includes(searchLower);
         const addressMatch = property.location?.address?.toLowerCase().includes(searchLower);
-
         return titleMatch || descMatch || locationMatch || cityMatch || addressMatch;
       });
     }
-
     // Location filter
     if (filters.location) {
       filtered = filtered.filter(property => {
@@ -402,28 +339,24 @@ const HomePage = () => {
           address.includes(filters.location.toLowerCase());
       });
     }
-
     // City filter
     if (filters.city) {
       filtered = filtered.filter(property =>
         property.location?.city?.toLowerCase().includes(filters.city.toLowerCase())
       );
     }
-
     // State filter
     if (filters.state) {
       filtered = filtered.filter(property =>
         property.location?.state?.toLowerCase().includes(filters.state.toLowerCase())
       );
     }
-
     // Property type filter
     if (filters.propertyType && filters.propertyType !== 'all') {
       filtered = filtered.filter(property =>
         property.propertyType?.toLowerCase() === filters.propertyType.toLowerCase()
       );
     }
-
     // Price range filter
     if (filters.priceRange) {
       filtered = filtered.filter(property => {
@@ -431,7 +364,6 @@ const HomePage = () => {
         return rent >= filters.priceRange.min && rent <= filters.priceRange.max;
       });
     }
-
     // Bedrooms filter
     if (filters.bedrooms && filters.bedrooms !== 'any') {
       const bedroomCount = parseInt(filters.bedrooms);
@@ -440,7 +372,6 @@ const HomePage = () => {
         return filters.bedrooms === '5' ? propBedrooms >= 5 : propBedrooms === bedroomCount;
       });
     }
-
     // Bathrooms filter
     if (filters.bathrooms && filters.bathrooms !== 'any') {
       const bathroomCount = parseInt(filters.bathrooms);
@@ -449,7 +380,6 @@ const HomePage = () => {
         return filters.bathrooms === '4' ? propBathrooms >= 4 : propBathrooms === bathroomCount;
       });
     }
-
     // Area filter
     if (filters.minArea || filters.maxArea) {
       filtered = filtered.filter(property => {
@@ -459,7 +389,6 @@ const HomePage = () => {
         return area >= minArea && area <= maxArea;
       });
     }
-
     // Amenities filter
     if (filters.amenities && filters.amenities.length > 0) {
       filtered = filtered.filter(property =>
@@ -470,11 +399,8 @@ const HomePage = () => {
         )
       );
     }
-
     setFilteredProperties(filtered);
   };
-
-
   const getLocationString = (location) => {
     if (typeof location === 'string') {
       return location
@@ -487,7 +413,6 @@ const HomePage = () => {
     }
     return 'Location not specified'
   }
-
   const handleCloseModals = () => {
     setShowAuthPrompt(false)
     setShowLogin(false)
@@ -495,7 +420,6 @@ const HomePage = () => {
     setShowPropertyDetails(false)
     setSelectedProperty(null)
   }
-
   if (loading) {
     return (
       <div className="homepage">
@@ -508,17 +432,10 @@ const HomePage = () => {
       </div>
     )
   }
-
   return (
     <>
       <div className="homepage">
         <div className="container">
-
-
-
-
-
-
           <section>
             <div className="whole-con" >
               <Container>
@@ -539,9 +456,6 @@ const HomePage = () => {
                       </p>
                     </div>
                   </div>
-
-
-
                   {/* Row 2 - Slider */}
                   <div className="slider-wrapper" >
                     <Slider {...sliderSettings}>
@@ -584,13 +498,8 @@ const HomePage = () => {
 
                         </div>
                       </div></div>
-
-
                     </Slider>
                   </div>
-
-
-
                   {/* Row 3 - Counters */}
                   <div className="counter-section">
                     <Counter target={7.4} label="Property Return Rate" />
@@ -605,91 +514,124 @@ const HomePage = () => {
               </Container>
             </div>
           </section>
-
-
-
-
-
-
-
-
-
-
-
-          <section className="res-sec">
+         <section className="res-sec">
+  <div
+    style={{
+      textAlign: "center",
+      padding: "50px 0 0 0",
+      width: "70%",
+      margin: "0 auto",
+    }}
+  >
+    <p className="head-size" style={{ fontSize: "50px" }}>Residential</p>
+    <p
+      className="para-pad"
+      style={{ paddingBottom: "50px", fontSize: "16px" }}
+    >
+      Find your dream home with Tru Owners. Explore a wide range of verified
+      residential listings including apartments, villas, plots, and independent
+      houses.
+    </p>
+  </div>
+  <div className="container-image">
+    {/* Left Column */}
+    <div className="left-col">
+      {propertyData.leftCol.map((row, rowIndex) => (
+        <div key={rowIndex} className="row1">
+          {row.map((item, index) => (
             <div
-              style={{
-                textAlign: "center",
-                padding: "50px 0 0 0",
-                width: "70%",
-                margin: "0 auto",
-              }}
+              key={index}
+              className={`img-box ${item.size}`}
+              style={{ backgroundImage: `url(${item.backgroundImage})` }}
+              onClick={() =>
+                navigate(
+                  `/properties?propertyType=${item.propertyType.toLowerCase()}&listingType=${activeTab.toLowerCase()}`
+                )
+              }
             >
-              <p className="head-size" style={{ fontSize: "50px" }}>Residential</p>
-              <p
-                className="para-pad"
-                style={{ paddingBottom: "50px", fontSize: "16px" }}
-              >
-                Find your dream home with Tru Owners. Explore a wide range of verified
-                residential listings including apartments, villas, plots, and independent
-                houses.
-              </p>
-            </div>
-
-            <div className="container-image">
-              {/* Left Column */}
-              <div className="left-col">
-                {propertyData.leftCol.map((row, rowIndex) => (
-                  <div key={rowIndex} className="row1">
-                    {row.map((item, index) => (
-                      <div
-                        key={index}
-                        className={`img-box ${item.size}`}
-                        style={{ backgroundImage: `url(${item.backgroundImage})` }}
-                        onClick={() =>
-                          navigate(`/properties?propertyType=${item.propertyType.toLowerCase()}`)
-                        }
-                      >
-                        <div className="overlay-1">
-                          <h4>{item.propertyType}</h4>
-                          <p>{item.count} properties</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Column */}
-              <div className="right-col">
-                {/* Independent House */}
-                <div
-                  className="img-box full-height"
-                  style={{
-                    backgroundImage: `url(${propertyData.rightCol.independent.backgroundImage})`,
-                  }}
-                  onClick={() =>
-                    navigate(`/properties?propertyType=${propertyData.rightCol.independent.propertyType.toLowerCase()}`)
-                  }
-                >
-                  <div className="overlay-1">
-                    <h4>{propertyData.rightCol.independent.propertyType}</h4>
-                    <p>{propertyData.rightCol.independent.count} properties</p>
-                  </div>
-                </div>
-
-                {/* Commercial Text Box */}
-                <div className="text-box">
-                  <h2>{propertyData.rightCol.commercial.heading}</h2>
-                  <p>{propertyData.rightCol.commercial.description}</p>
-                </div>
+              <div className="overlay-1">
+                <h4>{item.propertyType}</h4>
+                <p style={{ fontWeight: 600, fontStyle: 'italic', marginTop: '5px' }}>
+                  {item.listingType}
+                </p>
               </div>
             </div>
-          </section>
+          ))}
+        </div>
+      ))}
+    </div>
+    {/* Right Column */}
+    <div className="right-col">
+      {/* Independent House */}
+      <div
+        className="img-box full-height"
+        style={{
+          backgroundImage: `url(${propertyData.rightCol.independent.backgroundImage})`,
+        }}
+        onClick={() =>
+          navigate(
+            `/properties?propertyType=${propertyData.rightCol.independent.propertyType.toLowerCase()}&listingType=${activeTab.toLowerCase()}`
+          )
+        }
+      >
+        <div className="overlay-1">
+          <h4>{propertyData.rightCol.independent.propertyType}</h4>
+          <p style={{ fontWeight: 600, fontStyle: 'italic', marginTop: '5px' }}>
+            {propertyData.rightCol.independent.listingType}
+          </p>
+        </div>
+      </div>
 
-
-
-
+      {/* Commercial Text Box */}
+      <div className="text-box">
+        <h2>{propertyData.rightCol.commercial.heading}</h2>
+        <p style={{ fontWeight: 600, fontStyle: 'italic', marginTop: '5px' }}>
+          Commercial
+        </p>
+        <p>{propertyData.rightCol.commercial.description}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div className="search-filters" style={{ textAlign: 'center', marginBottom: '50px' }}>
+  <select
+    value={filters.propertyType}
+    onChange={(e) => setFilters(prev => ({ ...prev, propertyType: e.target.value }))}
+  >
+    <option value="all">All</option>
+    <option value="apartment">Apartment</option>
+    <option value="villa">Villa</option>
+    <option value="studio">Studio</option>
+    <option value="independent house">Independent House</option>
+  </select>
+  <select
+    value={filters.bedrooms}
+    onChange={(e) => setFilters(prev => ({ ...prev, bedrooms: e.target.value }))}
+  >
+    <option value="any">Any</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4+</option>
+  </select>
+  <input
+    type="text"
+    placeholder="Location"
+    value={filters.location}
+    onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
+  />
+<button
+  type="button"
+  onClick={() => {
+    console.log("Search clicked!");
+    console.log("Property Type:", filters.propertyType);
+    console.log("Bedrooms:", filters.bedrooms);
+    console.log("Type:", activeTab); // This is the selected tab
+  }}
+>
+  Search
+</button>
+</div>
           {/* Properties Grid */}
           <div className="properties-section" style={{ background: 'linear-gradient(180deg, #E1EDFF 0%, rgba(255, 255, 255, 0.14) 100%)' }}>
             <div className="properties-header" >
@@ -734,7 +676,6 @@ const HomePage = () => {
                 ))}
               </div>
             )}
-
             <div className="button-color">
               <Button
                 fullWidth
@@ -758,7 +699,7 @@ const HomePage = () => {
 
           </div>
 {/* 🌟 Premium Subscription Banner */}
-            <section
+<section
   className="w-full text-center flex items-center justify-center py-20"
   style={{
     background: "linear-gradient(180deg, #E1EDFF 0%, #FFFFFF 100%)",
@@ -793,16 +734,8 @@ const HomePage = () => {
     </button>
   </div>
 </section>
-
-
-
-
-
-
-
           <section className="about-cta">
             <div className="three-column-layout">
-
               {/* Column 3 (Form) */}
               <div className="column form-column" >
                 <form >
@@ -814,32 +747,22 @@ const HomePage = () => {
                   {/* <select>
           <option>Select</option>
         </select> */}
-
                   {/* <label className='title-color1'>Information</label> */}
                   {/* <input type="text" placeholder="I'm a" /> */}
                   <input type="text" placeholder="NAME" />
                   {/* <input type="text" placeholder="Last Name" /> */}
                   <input type="email" placeholder="EMAIL ADDRESS" />
-
                   <input type="number" placeholder="PHONE NUMBER" />
-
                   {/* 
  <input type="text" placeholder="LOCATION" /> */}
-
                   <textarea placeholder="HELLO, I AM INTERESTED IN 2 BHK 2ND FLOOR, NORTH FACING MAIN DOOR, 32000 RENT." rows="4"></textarea>
-
-
-
                   {/* <label>Property</label> */}
                   <select >
                     <option value="">INTERESTED IN</option>
                     <option value="SELL">SELL</option>
                     <option value="RENT">RENT</option>
                     <option value="LEASE">LEASE</option>
-
                   </select>
-
-
                   <label style={{ color: '#000' }}>
                     <input type="checkbox" /> By submitting this form I agree to Terms of Use
                   </label>
@@ -849,33 +772,21 @@ const HomePage = () => {
                   </div>
                   <div className='whatsapp-btn'>
                     <button type="submit" class="submit-btn mar-btn1" >WHATSAPP</button>
-
                   </div>
-
                 </form>
-
               </div>
-
               {/* Column 1 */}
               <div className="column center1">
                 <div className="section12">
-
                   <h3>Putting a plan to action,
                     to assure your satisfaction! </h3>
                   <p>
                     Every property listed on our platform is thoroughly verified for authenticity, location accuracy, and pricing—so you can rent or buy with complete confidence.
                   </p>
                 </div>
-
-
               </div>
-
-
-
             </div>
-            
           </section>
-
           <div
             style={{
               width: '100%',
@@ -1027,28 +938,26 @@ const HomePage = () => {
     </>
   )
 }
-
 export default HomePage
-
 const propertyData = {
   leftCol: [
     [
-      { propertyType: "Villa", count: 28, backgroundImage: villaImg, size: "w75" },
-      { propertyType: "Apartment", count: 12, backgroundImage: aprtmentImg, size: "w25" },
+      { propertyType: "Villa", listingType: "Rent", backgroundImage: villaImg, size: "w75" },
+      { propertyType: "Apartment", listingType: "Sale", backgroundImage: aprtmentImg, size: "w25" },
     ],
     [
-      { propertyType: "Studio", count: 13, backgroundImage: studioImg, size: "w25" },
-      { propertyType: "Single Family Room", count: 32, backgroundImage: singleImg, size: "w75" },
+      { propertyType: "Studio", listingType: "Lease", backgroundImage: studioImg, size: "w25" },
+      { propertyType: "Single Family Room", listingType: "Rent", backgroundImage: singleImg, size: "w75" },
     ],
     [
-      { propertyType: "Office", count: 32, backgroundImage: officeImg, size: "w75" },
-      { propertyType: "Shop", count: 18, backgroundImage: shopImg, size: "w25" },
+      { propertyType: "Office", listingType: "Commercial", backgroundImage: officeImg, size: "w75" },
+      { propertyType: "Shop", listingType: "Commercial", backgroundImage: shopImg, size: "w25" },
     ],
   ],
   rightCol: {
     independent: {
       propertyType: "Independent House",
-      count: 32,
+      listingType: "Rent", // ✅ Add the type here
       backgroundImage: indepenImg,
     },
     commercial: {
@@ -1058,3 +967,5 @@ const propertyData = {
     },
   },
 };
+
+

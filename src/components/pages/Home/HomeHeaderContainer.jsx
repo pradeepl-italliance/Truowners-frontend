@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./home.css";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -7,7 +7,6 @@ import search from "../../../assets/images/home/search.svg";
 import useScreenSize from "../../helper/userScreenSize.jsx";
 import PropertyTypeSelect from "../search-screen/propertyTypeSelect.jsx";
 import { BudgetFilter } from "../search-screen/budgetFilter.jsx";
-import { useRef } from "react";
 import SearchBar from "../search-screen/searchBar.jsx";
 import { useNavigate } from "react-router-dom";
 import PropertyFilters from "./PropertyFilters.jsx";
@@ -259,21 +258,24 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
 
   return (
     <div>
-      {/* ✅ HERO SECTION – single static image with reduced height */}
+      {/* ✅ HERO SECTION */}
       <div className="position-relative row g-0 justify-content-center cursor_pointer">
         <img
           className="home_header_image"
           src={headerImage}
           alt="hero_banner"
           style={{
-            width: "100%",   // full width
-            height: "400px", // reduced height, adjust as needed
+            width: "100%",
+            height: "400px",
+            objectFit: "cover",
           }}
         />
       </div>
 
+      {/* ✅ FILTER SECTION — removed mt-3 (margin-top) */}
       <div
-        className={`home_filter_main_container card border-0 p-1 mt-3 mt-lg-0 bg-transparent`}
+        className={`home_filter_main_container card border-0 p-1 mt-0 bg-transparent`}
+        style={{ marginTop: "0 !important" }}
       >
         <div className={width < 576 ? "pb-2" : "card-body"}>
           <div className="search-filter-container">
@@ -302,7 +304,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
         </div>
       </div>
 
-      {/* Properties Grid */}
+      {/* ✅ Properties Section */}
       <div className="properties-section sec-top">
         <div className="properties-header">
           <h2>Featured Properties</h2>
@@ -370,20 +372,14 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
         </div>
       </div>
 
-      {/* Modals */}
+      {/* ✅ Modals */}
       {showAuthPrompt && <AuthPromptModal onClose={handleCloseModals} />}
-
       {showLogin && (
-        <Login
-          onClose={handleCloseModals}
-          onSwitchToSignUp={handleSwitchToRegister}
-        />
+        <Login onClose={handleCloseModals} onSwitchToSignUp={handleSwitchToRegister} />
       )}
-
       {showRegister && (
         <Register onClose={handleCloseModals} onSwitchToLogin={handleSwitchToLogin} />
       )}
-
       {showPropertyDetails && selectedProperty && (
         <PropertyDetailsModal
           property={selectedProperty}

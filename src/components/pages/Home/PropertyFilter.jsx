@@ -22,6 +22,7 @@ const propertyTypes = [
   { label: "House", value: "house" },
   { label: "Villa", value: "villa" },
   { label: "Studio", value: "studio" },
+  { label: "Commercial", value: "commercial" },
 ];
 
 const bedroomOptions = [
@@ -122,16 +123,14 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
   const lastSearchRef = useRef("");
   const isInitialMount = useRef(true);
 
-  
   useEffect(() => {
     setStatusTab(0);
     setFilters(defaultFilters);
 
-   
     window.history.replaceState({}, "", window.location.origin + window.location.pathname);
-
     isInitialMount.current = false;
   }, []);
+
   useEffect(() => {
     if (!isInitialMount.current && Object.keys(currentFilters).length > 0) {
       setFilters((prev) => ({
@@ -165,6 +164,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
     if (statusTab === 1) params.append("status", "rent");
     if (statusTab === 2) params.append("status", "sale");
     if (statusTab === 3) params.append("status", "lease");
+    if (statusTab === 4) params.append("status", "commercial"); // ✅ Added commercial tab logic
 
     if (filters.propertyType) params.append("propertyType", filters.propertyType);
     if (filters.city) params.append("city", filters.city);
@@ -185,6 +185,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
         <StyledTab label="FOR RENT" />
         <StyledTab label="FOR SALE" />
         <StyledTab label="FOR LEASE" />
+        <StyledTab label="FOR COMMERCIAL" /> {/* ✅ Added new tab here */}
       </StyledTabs>
 
       {/* Filters */}

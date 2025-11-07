@@ -237,7 +237,7 @@ const PriceInput = styled(TextField)(({ theme }) => ({
 // ======== Component ========
 export default function FilterSidebar({ initialFilters = {}, currentFilters = {}, onSearch }) {
 
-  const [statusTab, setStatusTab] = useState(0);
+             const [statusTab, setStatusTab] = useState(0);
   const [showMoreFilters, setShowMoreFilters] = useState();
   const [filters, setFilters] = useState(() => ({
     ...defaultFilters,

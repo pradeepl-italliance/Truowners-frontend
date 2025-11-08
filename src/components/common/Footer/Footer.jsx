@@ -85,7 +85,7 @@ const Footer = () => {
   >
     <PhoneIcon sx={iconStyle} />
     <Typography variant="body1" sx={{ ml: 1, fontSize: "15px" }}>
-      +91 8095511561
+      +91 8867721812
     </Typography>
   </Box>
 

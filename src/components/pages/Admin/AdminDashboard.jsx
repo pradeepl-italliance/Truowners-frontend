@@ -27,7 +27,7 @@ import SubscriptionTab from './SubscriptionTab';
 const navItems = [
   { label: 'Dashboard', icon: <DashboardIcon /> },
   { label: 'Users', icon: <PeopleIcon /> },
-  { label: 'Property', icon: <HomeIcon /> },
+  { label: 'Properties', icon: <HomeIcon /> },
   { label: 'Bookings', icon: <BookingsIcon /> },
   { label: 'Subscription', icon: <SubscriptionIcon /> }
 ];

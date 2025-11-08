@@ -43,6 +43,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
   const [postType, setPostType] = useState(null);
 
   const [filters, setFilters] = useState({
+    status: "All",
     propertyType: "",
     city: "",
     bedrooms: "",
@@ -85,11 +86,14 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
       }
 
       const params = new URLSearchParams();
+      if (filters.status) params.append("status", filters.status);
       if (filters.propertyType) params.append("propertyType", filters.propertyType);
       if (filters.city) params.append("city", filters.city);
       if (filters.bedrooms) params.append("bedrooms", filters.bedrooms);
       if (filters.searchTerm) params.append("search", filters.searchTerm);
       if (filters.maxBudget) params.append("maxBudget", filters.maxBudget);
+
+        console.log(params.toString(), "params");
 
       const response = await fetch(
         `${buildApiUrl(API_CONFIG.USER.PROPERTIES)}?${params.toString()}`,
@@ -281,6 +285,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
           <div className="search-filter-container">
             <PropertyFilter
               initialFilters={{
+                status: "",
                 propertyType: "",
                 city: "",
                 bedrooms: "",
@@ -291,6 +296,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
               onSearch={(queryString, updatedFilters) => {
                 setFilters({
                   ...filters,
+                  status: updatedFilters.status,
                   propertyType: updatedFilters.propertyType,
                   city: updatedFilters.city,
                   bedrooms: updatedFilters.bedrooms,
@@ -320,6 +326,7 @@ const HomeHeaderContainer = ({ activeBtn = "all", activeTab, setActiveTab }) => 
               className="btn btn-primary"
               onClick={() => {
                 setFilters({
+                  status: "All",
                   propertyType: "",
                   city: "",
                   bedrooms: "",

@@ -35,6 +35,7 @@ const bedroomOptions = [
 ];
 
 const defaultFilters = {
+  status: "",
   propertyType: "",
   city: "",
   bedrooms: "",
@@ -44,7 +45,7 @@ const defaultFilters = {
 
 // ======== Styled Components ========
 const StyledTabs = styled(Tabs)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  // marginBottom: theme.spacing(3),
   "& .MuiTabs-flexContainer": {
     justifyContent: "center",
     flexWrap: "wrap",
@@ -114,11 +115,12 @@ const SectionLabel = styled(Typography)(() => ({
 
 // ======== Component ========
 export default function PropertyFilter({ initialFilters = {}, currentFilters = {}, onSearch }) {
-  const [statusTab, setStatusTab] = useState(0);
   const [filters, setFilters] = useState(() => ({
     ...defaultFilters,
     ...initialFilters,
   }));
+  const [statusTab, setStatusTab] = useState(filters.status ?? 0);
+
 
   const lastSearchRef = useRef("");
   const isInitialMount = useRef(true);
@@ -156,11 +158,14 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
 
   const handleTabChange = (event, newValue) => {
     setStatusTab(newValue);
+    setFilters((prev) => ({ ...prev, status: newValue === 0 ? "All" : newValue === 1 ? "rent" : newValue === 2 ? "sale" : newValue === 3 ? "lease" : "commercial" }));
   };
+
 
   const handleSearchClick = () => {
     const params = new URLSearchParams();
 
+    if (statusTab === 0) params.append("status", "All");
     if (statusTab === 1) params.append("status", "rent");
     if (statusTab === 2) params.append("status", "sale");
     if (statusTab === 3) params.append("status", "lease");
@@ -175,6 +180,10 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
     lastSearchRef.current = filters.search;
 
     onSearch(params.toString(), filters);
+
+    console.log(params.toString(), "nihughiu");
+    
+
   };
 
   return (
@@ -285,7 +294,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
             InputProps={{
               startAdornment: <InputAdornment position="start">₹</InputAdornment>,
             }}
-                placeholder={"MAX PRICE"}
+            placeholder={"MAX PRICE"}
           />
         </Grid>
 

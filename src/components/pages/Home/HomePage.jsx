@@ -593,44 +593,7 @@ const handleSearch = () => {
     </div>
   </div>
 </section>
-<div className="search-filters" style={{ textAlign: 'center', marginBottom: '50px' }}>
-  <select
-    value={filters.propertyType}
-    onChange={(e) => setFilters(prev => ({ ...prev, propertyType: e.target.value }))}
-  >
-    <option value="all">All</option>
-    <option value="apartment">Apartment</option>
-    <option value="villa">Villa</option>
-    <option value="studio">Studio</option>
-    <option value="independent house">Independent House</option>
-  </select>
-  <select
-    value={filters.bedrooms}
-    onChange={(e) => setFilters(prev => ({ ...prev, bedrooms: e.target.value }))}
-  >
-    <option value="any">Any</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4+</option>
-  </select>
-  <input
-    type="text"
-    placeholder="Location"
-    value={filters.location}
-    onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
-  />
-<button
-  type="button"
-  onClick={() => {
-    console.log("Search clicked!");
-    console.log("Property Type:", filters.propertyType);
-    console.log("Bedrooms:", filters.bedrooms);
-    console.log("Type:", activeTab); // This is the selected tab
-  }}
->
-  Search
-</button>
+
 </div>
           {/* Properties Grid */}
           <div className="properties-section" style={{ background: 'linear-gradient(180deg, #E1EDFF 0%, rgba(255, 255, 255, 0.14) 100%)' }}>
@@ -904,7 +867,7 @@ const handleSearch = () => {
             </div>
           </div>
         </div>
-      </div>
+      
 
       {/* Modals */}
       {showAuthPrompt && (

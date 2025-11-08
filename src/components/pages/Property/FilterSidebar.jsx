@@ -236,6 +236,27 @@ const PriceInput = styled(TextField)(({ theme }) => ({
 
 // ======== Component ========
 export default function FilterSidebar({ initialFilters = {}, currentFilters = {}, onSearch }) {
+  // format number into readable ₹ with L / Cr
+  const formatCurrencyShort = (val) => {
+    if (val >= 10000000) return (val / 10000000).toFixed(2) + " Cr";
+    if (val >= 100000) return (val / 100000).toFixed(2) + " L";
+    return val.toLocaleString();
+  };
+
+  // suggested min/max based on selected status tab
+  const getSuggestedRange = (tabIndex) => {
+    switch (tabIndex) {
+      case 1: // FOR RENT
+      case 4: // FOR COMMERCIAL
+        return [5000, 500000];      // ₹5K - ₹5L
+      case 3: // FOR LEASE
+        return [500000, 2000000];   // ₹5L - ₹20L
+      case 2: // FOR SALE
+        return [1000000, 30000000]; // ₹10L - ₹3Cr
+      default:
+        return [5000, 30000000];    // full range
+    }
+  };
 
              const [statusTab, setStatusTab] = useState(0);
   const [showMoreFilters, setShowMoreFilters] = useState();
@@ -243,6 +264,15 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
     ...defaultFilters,
     ...initialFilters,
   }));
+  // Custom range slider state (₹5K → ₹3Cr)
+  const [customRange, setCustomRange] = useState([5000, 30000000]);
+
+  // 🔄 Auto-update custom range when tab changes (Rent / Sale / Lease / Commercial)
+  useEffect(() => {
+    const [min, max] = getSuggestedRange(statusTab);
+    setCustomRange([min, max]);
+  }, [statusTab]);
+
 
   const lastSearchRef = useRef("");
   const isInitialMount = useRef(true);
@@ -544,143 +574,137 @@ const handleSearchClick = () => {
         </Button>
       </Grid>
 
-      {/* Second Row - Budget and Rent Sliders */}
-      {showMoreFilters === true ?
+{showMoreFilters === true ? (
+  <>
+    {/* <Grid container spacing={4} justifyContent="center" display={"flex"}> */}
+
+    {/* --- Rent Range (Dynamic ₹ Range like screenshot, no dollar icon) --- */}
+    <Grid item xs={12} md={5} maxWidth={"350px"}>
+      <SectionLabel>
+        RENT RANGE ₹{formatCurrencyShort(customRange[0])} – ₹{formatCurrencyShort(customRange[1])}
+      </SectionLabel>
+
+      <SliderContainer>
+        <Box sx={{ mb: 2 }}>
+          <Slider
+            value={customRange}
+            onChange={(e, newValue) => setCustomRange(newValue)}
+            onChangeCommitted={() => {
+              const [min, max] = getSuggestedRange(statusTab);
+              if (customRange[0] < min || customRange[1] > max) {
+                setCustomRange([min, max]);
+              }
+            }}
+            valueLabelDisplay="off"
+            min={5000}
+            max={30000000}
+            step={5000}
+            sx={{
+              color: "#1976d2",
+              "& .MuiSlider-thumb": {
+                width: 20,
+                height: 20,
+              },
+            }}
+          />
+        </Box>
+      </SliderContainer>
+    </Grid>
+
+    {/* --- RENT RANGE Section (unchanged, used for rent-specific filters) --- */}
+    <Grid item xs={12} md={5} maxWidth={"350px"}>
+      {(statusTab === 1 || statusTab === 4) && (
         <>
-          {/* <Grid container spacing={4} justifyContent="center" display={"flex"}> */}
-          <Grid item xs={12} md={5} maxWidth={"350px"}>
-            <SectionLabel>
-              <AttachMoneyIcon sx={{ fontSize: 16 }} />
-              BUDGET RANGE
-            </SectionLabel>
-            <SliderContainer>
-              <Box sx={{ mb: 2 }}>
-                <Slider
-                  value={filters.budgetRange}
-                  onChange={(e, value) => handleSliderChange("budgetRange", value)}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={100000}
-                  step={1000}
-                  valueLabelFormat={(value) => `₹${value.toLocaleString()}`}
-                  sx={{
-                    color: "#1976d2",
-                    "& .MuiSlider-thumb": {
-                      width: 20,
-                      height: 20,
-                    },
+          <SectionLabel>
+            RENT RANGE
+          </SectionLabel>
+          <SliderContainer>
+            <Box sx={{ mb: 2 }}>
+              <Slider
+                value={filters.rentRange}
+                onChange={(e, value) => handleSliderChange("rentRange", value)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={50000}
+                step={500}
+                valueLabelFormat={(value) => `₹${value.toLocaleString()}`}
+                sx={{
+                  color: "#1976d2",
+                  "& .MuiSlider-thumb": {
+                    width: 20,
+                    height: 20,
+                  },
+                }}
+              />
+            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <PriceInput
+                  fullWidth
+                  size="small"
+                  label="Min Rent"
+                  value={filters.rentMin}
+                  onChange={(e) =>
+                    handleMinMaxChange("rent", "min", e.target.value)
+                  }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
                   }}
                 />
-              </Box>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <PriceInput
-                    fullWidth
-                    size="small"
-                    label="Min Budget"
-                    value={filters.budgetMin}
-                    onChange={(e) => handleMinMaxChange("budget", "min", e.target.value)}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <PriceInput
-                    fullWidth
-                    size="small"
-                    label="Max Budget"
-                    value={filters.budgetMax}
-                    onChange={(e) => handleMinMaxChange("budget", "max", e.target.value)}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                    }}
-                  />
-                </Grid>
               </Grid>
-            </SliderContainer>
-          </Grid>
-
-          <Grid item xs={12} md={5} maxWidth={"350px"}>
-           
-            {(statusTab === 1 || statusTab === 4) && <>
-            <SectionLabel>
-              <AttachMoneyIcon sx={{ fontSize: 16 }} />
-              RENT RANGE
-            </SectionLabel>
-            <SliderContainer>
-              <Box sx={{ mb: 2 }}>
-                <Slider
-                  value={filters.rentRange}
-                  onChange={(e, value) => handleSliderChange("rentRange", value)}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={50000}
-                  step={500}
-                  valueLabelFormat={(value) => `₹${value.toLocaleString()}`}
-                  sx={{
-                    color: "#1976d2",
-                    "& .MuiSlider-thumb": {
-                      width: 20,
-                      height: 20,
-                    },
+              <Grid item xs={6}>
+                <PriceInput
+                  fullWidth
+                  size="small"
+                  label="Max Rent"
+                  value={filters.rentMax}
+                  onChange={(e) =>
+                    handleMinMaxChange("rent", "max", e.target.value)
+                  }
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
                   }}
                 />
-              </Box>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <PriceInput
-                    fullWidth
-                    size="small"
-                    label="Min Rent"
-                    value={filters.rentMin}
-                    onChange={(e) => handleMinMaxChange("rent", "min", e.target.value)}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <PriceInput
-                    fullWidth
-                    size="small"
-                    label="Max Rent"
-                    value={filters.rentMax}
-                    onChange={(e) => handleMinMaxChange("rent", "max", e.target.value)}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                    }}
-                  />
-                </Grid>
               </Grid>
-
-            </SliderContainer>  </>
-}
-          
-            <Grid>
-              <SectionLabel>
-                Amenities
-              </SectionLabel>
-              <FormGroup>
-                {amenitiesList.map((amenity) => (
-                  <FormControlLabel
-                    key={amenity}
-                    control={
-                      <Checkbox
-                        checked={filters.amenities.includes(amenity)}
-                        onChange={handleChangeAmenities}
-                        name={amenity}
-                      />
-                    }
-                    label={amenity}
-                  />
-                ))}
-              </FormGroup>
             </Grid>
-          </Grid>
-          {/* </Grid> */}
+          </SliderContainer>
         </>
-        : <></>}
+      )}
+
+      {/* --- AMENITIES Section (unchanged) --- */}
+      <Grid>
+        <SectionLabel>Amenities</SectionLabel>
+        <FormGroup>
+          {amenitiesList.map((amenity) => (
+            <FormControlLabel
+              key={amenity}
+              control={
+                <Checkbox
+                  checked={filters.amenities.includes(amenity)}
+                  onChange={handleChangeAmenities}
+                  name={amenity}
+                />
+              }
+              label={amenity}
+            />
+          ))}
+        </FormGroup>
+      </Grid>
+    </Grid>
+
+    {/* </Grid> */}
+  </>
+) : (
+  <></>
+)}
+
+
+
+
     </div>
   );
 }

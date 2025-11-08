@@ -245,63 +245,70 @@ const PropertiesTab = () => {
 
   /* ---------------- Property Actions ---------------- */
   const handlePropertyAction = async (propertyId, action, newStatus = null) => {
-    try {
-      setActionLoading(true);
-      const token = localStorage.getItem('adminToken');
+  try {
+    setActionLoading(true);
+    const token = localStorage.getItem('adminToken');
 
-      let endpoint, method = (action === 'review') ? 'PATCH' : 'PUT', body = null;
+    let endpoint, method = 'PUT', body = null;
 
-      switch (action) {
-        case 'review':
-          endpoint = API_CONFIG.ADMIN.REVIEW_PROPERTY.replace(':id', propertyId);
-          body = JSON.stringify({ status: newStatus });
-          break;
-        case 'publish':
-          endpoint = API_CONFIG.ADMIN.PUBLISH_PROPERTY.replace(':id', propertyId);
-          body = JSON.stringify({ status: newStatus });
-          break;
-        case 'markSold':
-          endpoint = API_CONFIG.ADMIN.PUBLISH_PROPERTY.replace(':id', propertyId);
-          body = JSON.stringify({ status: newStatus });
-          break;
-        default:
-          throw new Error('Unknown action');
-      }
-
-      const response = await fetch(buildApiUrl(endpoint), {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        ...(body && { body })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to ${action} property`);
-      }
-
-      const actionText = action === 'markSold' ? 'marked as sold' : `${action}ed`;
-      setSnackbar({
-        open: true,
-        message: `Property ${actionText} successfully`,
-        severity: 'success'
-      });
-
-      await fetchProperties();
-      setDialogOpen(false);
-
-    } catch (err) {
-      console.error(`Property ${action} error:`, err);
-      setSnackbar({
-        open: true,
-        message: `Error: ${err.message}`,
-        severity: 'error'
-      });
-    } finally {
-      setActionLoading(false);
+    switch (action) {
+      case 'review':
+        endpoint = API_CONFIG.ADMIN.REVIEW_PROPERTY.replace(':id', propertyId);
+        body = JSON.stringify({ status: newStatus });
+        method = 'PATCH';
+        break;
+      case 'publish':
+        endpoint = API_CONFIG.ADMIN.PUBLISH_PROPERTY.replace(':id', propertyId);
+        body = JSON.stringify({ status: newStatus });
+        break;
+      case 'markSold':
+      case 'unsold':
+        endpoint = API_CONFIG.ADMIN.PUBLISH_PROPERTY.replace(':id', propertyId);
+        body = JSON.stringify({ status: newStatus });
+        break;
+      default:
+        throw new Error('Unknown action');
     }
-  };
+
+    const response = await fetch(buildApiUrl(endpoint), {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      ...(body && { body })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to ${action} property`);
+    }
+
+    const actionText = 
+      action === 'markSold' ? 'marked as sold' : 
+      action === 'unsold' ? 'marked as unsold' : 
+      `${action}ed`;
+
+    setSnackbar({
+      open: true,
+      message: `Property ${actionText} successfully`,
+      severity: 'success'
+    });
+
+    await fetchProperties();
+    setDialogOpen(false);
+
+  } catch (err) {
+    console.error(`Property ${action} error:`, err);
+    setSnackbar({
+      open: true,
+      message: `Error: ${err.message}`,
+      severity: 'error'
+    });
+  } finally {
+    setActionLoading(false);
+  }
+};
+
 
   /* ---------------- UI Helpers ---------------- */
   const getStatusColor = (status) => {
@@ -1137,59 +1144,73 @@ const PropertiesTab = () => {
           )}
         </DialogContent>
 
-        <DialogActions sx={{ p: 3, gap: 1 }}>
-          <Button onClick={() => setDialogOpen(false)}>Close</Button>
+      <DialogActions sx={{ p: 3, gap: 1 }}>
+  <Button onClick={() => setDialogOpen(false)}>Close</Button>
 
-          {/* Actions for pending properties */}
-          {selectedProperty?.status === 'pending' && (
-            <>
-              <Button
-                color="error"
-                variant="outlined"
-                disabled={actionLoading}
-                onClick={() => handlePropertyAction(selectedProperty.id, 'review', 'rejected')}
-                startIcon={actionLoading ? <CircularProgress size={16} /> : <Cancel />}
-              >
-                Reject
-              </Button>
-              <Button
-                color="success"
-                variant="contained"
-                disabled={actionLoading}
-                onClick={() => handlePropertyAction(selectedProperty.id, 'review', 'approved')}
-                startIcon={actionLoading ? <CircularProgress size={16} /> : <CheckCircle />}
-              >
-                Approve
-              </Button>
-            </>
-          )}
+  {/* Actions for pending properties */}
+  {selectedProperty?.status === 'pending' && (
+    <>
+      <Button
+        color="error"
+        variant="outlined"
+        disabled={actionLoading}
+        onClick={() => handlePropertyAction(selectedProperty.id, 'review', 'rejected')}
+        startIcon={actionLoading ? <CircularProgress size={16} /> : <Cancel />}
+      >
+        Reject
+      </Button>
+      <Button
+        color="success"
+        variant="contained"
+        disabled={actionLoading}
+        onClick={() => handlePropertyAction(selectedProperty.id, 'review', 'approved')}
+        startIcon={actionLoading ? <CircularProgress size={16} /> : <CheckCircle />}
+      >
+        Approve
+      </Button>
+    </>
+  )}
 
-          {/* Actions for approved properties */}
-          {selectedProperty?.status === 'approved' && (
-            <Button
-              color="primary"
-              variant="contained"
-              disabled={actionLoading}
-              onClick={() => handlePropertyAction(selectedProperty.id, 'publish', 'published')}
-              startIcon={actionLoading ? <CircularProgress size={16} /> : <Publish />}
-            >
-              Publish
-            </Button>
-          )}
+  {/* Actions for approved properties */}
+  {selectedProperty?.status === 'approved' && (
+    <Button
+      color="primary"
+      variant="contained"
+      disabled={actionLoading}
+      onClick={() => handlePropertyAction(selectedProperty.id, 'publish', 'published')}
+      startIcon={actionLoading ? <CircularProgress size={16} /> : <Publish />}
+    >
+      Publish
+    </Button>
+  )}
 
-          {/* Actions for published properties */}
-          {selectedProperty?.status === 'published' && (
-            <Button
-              color="secondary"
-              variant="contained"
-              disabled={actionLoading}
-              onClick={() => handlePropertyAction(selectedProperty.id, 'markSold', 'sold')}
-              startIcon={actionLoading ? <CircularProgress size={16} /> : <CheckCircleOutline />}
-            >
-              Mark as Sold
-            </Button>
-          )}
-        </DialogActions>
+  {/* Actions for published properties */}
+  {selectedProperty?.status === 'published' && (
+    <Button
+      color="secondary"
+      variant="contained"
+      disabled={actionLoading}
+      onClick={() => handlePropertyAction(selectedProperty.id, 'markSold', 'sold')}
+      startIcon={actionLoading ? <CircularProgress size={16} /> : <CheckCircleOutline />}
+    >
+      Mark as Sold
+    </Button>
+  )}
+
+  {/* Actions for sold properties */}
+  {selectedProperty?.status === 'sold' && (
+    <Button
+      color="primary"
+      variant="contained"
+      disabled={actionLoading}
+      onClick={() => handlePropertyAction(selectedProperty.id, 'unsold', 'published')}
+      startIcon={actionLoading ? <CircularProgress size={16} /> : <Publish />}
+    >
+      Unsold
+    </Button>
+  )}
+</DialogActions>
+
       </Dialog>
 
       <Snackbar

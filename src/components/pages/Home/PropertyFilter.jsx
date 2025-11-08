@@ -45,7 +45,6 @@ const defaultFilters = {
 
 // ======== Styled Components ========
 const StyledTabs = styled(Tabs)(({ theme }) => ({
-  // marginBottom: theme.spacing(3),
   "& .MuiTabs-flexContainer": {
     justifyContent: "center",
     flexWrap: "wrap",
@@ -119,17 +118,29 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
     ...defaultFilters,
     ...initialFilters,
   }));
-  const [statusTab, setStatusTab] = useState(filters.status ?? 0);
 
+  // Map status to tab index
+  const getStatusTabIndex = (status) => {
+    switch (status) {
+      case "rent":
+        return 1;
+      case "sale":
+        return 2;
+      case "lease":
+        return 3;
+      case "commercial":
+        return 4;
+      default:
+        return 0;
+    }
+  };
+
+  const [statusTab, setStatusTab] = useState(getStatusTabIndex(filters.status));
 
   const lastSearchRef = useRef("");
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    setStatusTab(0);
-    setFilters(defaultFilters);
-
-    window.history.replaceState({}, "", window.location.origin + window.location.pathname);
     isInitialMount.current = false;
   }, []);
 
@@ -139,6 +150,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
         ...prev,
         ...currentFilters,
       }));
+      setStatusTab(getStatusTabIndex(currentFilters.status));
     }
   }, [currentFilters]);
 
@@ -158,19 +170,14 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
 
   const handleTabChange = (event, newValue) => {
     setStatusTab(newValue);
-    setFilters((prev) => ({ ...prev, status: newValue === 0 ? "All" : newValue === 1 ? "rent" : newValue === 2 ? "sale" : newValue === 3 ? "lease" : "commercial" }));
+    const statusMap = ["All", "rent", "sale", "lease", "commercial"];
+    setFilters((prev) => ({ ...prev, status: statusMap[newValue] }));
   };
-
 
   const handleSearchClick = () => {
     const params = new URLSearchParams();
 
-    if (statusTab === 0) params.append("status", "All");
-    if (statusTab === 1) params.append("status", "rent");
-    if (statusTab === 2) params.append("status", "sale");
-    if (statusTab === 3) params.append("status", "lease");
-    if (statusTab === 4) params.append("status", "commercial"); // ✅ Added commercial tab logic
-
+    if (filters.status) params.append("status", filters.status);
     if (filters.propertyType) params.append("propertyType", filters.propertyType);
     if (filters.city) params.append("city", filters.city);
     if (filters.bedrooms) params.append("bedrooms", filters.bedrooms);
@@ -180,10 +187,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
     lastSearchRef.current = filters.search;
 
     onSearch(params.toString(), filters);
-
-    console.log(params.toString(), "nihughiu");
-    
-
+    console.log(params.toString(), "Search Params");
   };
 
   return (
@@ -194,7 +198,7 @@ export default function PropertyFilter({ initialFilters = {}, currentFilters = {
         <StyledTab label="FOR RENT" />
         <StyledTab label="FOR SALE" />
         <StyledTab label="FOR LEASE" />
-        <StyledTab label="FOR COMMERCIAL" /> {/* ✅ Added new tab here */}
+        <StyledTab label="FOR COMMERCIAL" />
       </StyledTabs>
 
       {/* Filters */}

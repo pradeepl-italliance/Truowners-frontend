@@ -19,7 +19,12 @@ import FaqPage from './components/pages/other/FaqPage'
 import MyBookings from './components/pages/bookings/MyBookings'
 import PropertiesPage from './components/pages/Property/Properties'
 import SubscriptionPlans from './components/pages/other/SubscriptionPlans'
-import ScrollToTop from './components/common/ScrollToTop';
+import ScrollToTop from './components/common/ScrollToTop'
+
+// ✅ Newly added imports
+import SuccessPage from './components/pages/subscription/SuccessPage'
+import ErrorPage from './components/pages/subscription/ErrorPage'
+import ProcessingPage from './components/pages/subscription/ProcessingPage' // <-- Added
 
 import './styles/globals.css'
 import './styles/components.css'
@@ -84,6 +89,11 @@ function App() {
               <Route path="/property/:id" element={<LayoutWrapper><PropertyDetailsPage /></LayoutWrapper>} />
               <Route path="/wishlist" element={<LayoutWrapper><WishlistPage /></LayoutWrapper>} />
               <Route path="/my-bookings" element={<LayoutWrapper><MyBookings /></LayoutWrapper>} />
+
+              {/* ✅ FontPage / PhonePe Integration Result Pages */}
+              <Route path="/processing" element={<LayoutWrapper><ProcessingPage /></LayoutWrapper>} /> {/* <-- Added */}
+              <Route path="/success" element={<LayoutWrapper><SuccessPage /></LayoutWrapper>} />
+              <Route path="/error" element={<LayoutWrapper><ErrorPage /></LayoutWrapper>} />
 
               {/* Admin Routes */}
               <Route 

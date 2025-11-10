@@ -2,121 +2,103 @@ import React from 'react';
 import './PrivacyPolicyPage.css';
 
 const PrivacyPolicy = () => {
-    return (
-        <div className="terms-container">
-            {/* Section 1: Banner */}
-            <section className="terms-banner">
-                <h1>Privacy Policy</h1>
-            </section>
+  return (
+    <div className="terms-container">
+      {/* Section 1: Banner */}
+      <section className="terms-banner">
+        <h1>Privacy Policy</h1>
+      </section>
 
-            {/* Section 2: Content */}
-            <section className="terms-content">
-                <p className="updated-date">Last Updated on 29 May, 2023</p>
+      {/* Section 2: Content */}
+      <section className="terms-content">
+        <p className="updated-date">Last Updated on 1 November, 2025</p>
 
-                <p className="highlight">
-        PLEASE READ THIS PRIVACY POLICY CAREFULLY. BY USING THE WEBSITE, YOU
-        INDICATE THAT YOU UNDERSTAND, AGREE AND CONSENT TO THIS PRIVACY POLICY.
-        IF YOU DO NOT AGREE WITH THE TERMS OF THIS PRIVACY POLICY, PLEASE DO NOT
-        USE THIS WEBSITE.
-      </p>
+        <p className="highlight">
+          PLEASE READ THIS PRIVACY POLICY CAREFULLY. BY USING THE TRUOWNERS WEBSITE OR MOBILE PLATFORM, 
+          YOU INDICATE THAT YOU UNDERSTAND, AGREE, AND CONSENT TO THIS PRIVACY POLICY.
+        </p>
 
-      <p>
-        This Privacy Policy (“Policy“) is published in accordance with Rule
-        3(1) of the Information Technology (Intermediaries Guidelines) Rules,
-        2011. This Policy is an ‘electronic record’ as contemplated under
-        section 2(t) of the Information Technology Act, 2000 and does not
-        require any physical or digital signature.
-      </p>
+        <h2 className="padd">Introduction</h2>
+        <p>
+          TRUOWNERS (“we”, “our”, “us”) respects your privacy and is committed to protecting your 
+          personal data. This Privacy Policy explains how we collect, use, and safeguard your information 
+          when you access our website, create an account, list or view properties, or use any related 
+          services.
+        </p>
 
-      <h2 className='padd'>Introduction</h2>
-      <p>
-        Users are requested to read and understand the Policy very carefully
-        before using or accessing the Website. Through this Policy, Our Company
-        intends to convey the manner in which the user’s information is
-        collected and used while providing the services of the Website. This
-        Policy is binding on every user of the Website and users who do not
-        agree with the terms of this Policy should not use or access the
-        Website.
-      </p>
-      <p>
-        Our Company reserves its right to change, edit, alter, amend, modify,
-        review, revise or substitute this Policy with or without notice. By
-        using the Website, the users signify they have carefully read,
-        understood and agree to be bound by this Policy including any changes
-        made from time to time.
-      </p>
+        <h2 className="padd">Information We Collect</h2>
+        <ul>
+          <li><strong>Personal Information:</strong> Name, email address, phone number, and address when you register or list a property.</li>
+          <li><strong>Property Details:</strong> Information you provide while creating listings such as property images, location, price, and description.</li>
+          <li><strong>Transaction Data:</strong> Details related to subscription payments or plan purchases through our payment gateway partners.</li>
+          <li><strong>Technical Data:</strong> IP address, browser type, device information, and usage logs collected automatically for analytics and security.</li>
+        </ul>
 
-      <h2 className='padd'>User Information</h2>
-      <p>
-        ‘User information’ includes the user’s personal information that can be
-        used to uniquely identify or contact a single person including name,
-        email address, residential address, phone number, photograph and other
-        information collected by Our Company to provide services to the user.
-      </p>
-      <p>
-        If any user is providing any User Information on behalf of any entity,
-        they should be authorized by such entity to provide such information to
-        Our Company.
-      </p>
+        <h2 className="padd">How We Use Your Information</h2>
+        <p>We may use your data for the following purposes:</p>
+        <ul>
+          <li>To verify and manage owner and property listings.</li>
+          <li>To process subscriptions and payment transactions securely.</li>
+          <li>To respond to inquiries and provide customer support.</li>
+          <li>To send updates, alerts, and promotional content (only with your consent).</li>
+          <li>To improve our platform’s user experience and functionality.</li>
+        </ul>
 
-      <h2 className='padd'>Use of Information &amp; Disclosure</h2>
-      <p>
-        The User Information is primarily used to facilitate a better,
-        customized, and convenient use of the Website’s services. It may also
-        be used to respond to queries, improve services, detect fraud, send
-        marketing communications, personalize the experience, and process
-        transactions.
-      </p>
-      <p>
-        User Information is disclosed if required by law, in good faith for
-        legal processes, or in case of mergers/acquisitions. It may also be
-        shared with trusted third-party vendors and service providers.
-      </p>
+        <h2 className="padd">Sharing & Disclosure</h2>
+        <p>
+          We do not sell your personal information. Your information may be shared only with:
+        </p>
+        <ul>
+          <li>Authorized payment gateway providers for transaction processing.</li>
+          <li>Trusted service providers assisting with hosting, analytics, or communication.</li>
+          <li>Legal or regulatory authorities when required by law.</li>
+        </ul>
 
-      <h2 className='padd'>User Representation</h2>
-      <ul>
-        <li>
-          The Information you provide is authentic, correct, current, and
-          updated.
-        </li>
-        <li>
-          Providing the Information does not violate any third-party agreement
-          or law.
-        </li>
-        <li>
-          Our Company is not responsible for the authenticity of the
-          Information.
-        </li>
-        <li>
-          Information may be stored in electronic or physical form in or
-          outside India.
-        </li>
-      </ul>
+        <h2 className="padd">Data Security</h2>
+        <p>
+          TRUOWNERS implements industry-standard security measures to protect your data. However, 
+          no platform can guarantee complete security. Users are responsible for maintaining 
+          the confidentiality of their login credentials.
+        </p>
 
-      <h2 className='padd'>Security &amp; User Restriction</h2>
-      <p>
-        Our Company implements standard measures to protect against
-        unauthorized access but no internet site can guarantee 100% security.
-        Users are responsible for maintaining the confidentiality of their
-        account and password.
-      </p>
+        <h2 className="padd">Cookies & Tracking</h2>
+        <p>
+          We use cookies to improve site performance and personalize your experience. 
+          You may disable cookies through your browser settings, but some features may not work as intended.
+        </p>
 
-      <h2 className='padd'>Third Party Websites and Links</h2>
-      <p>
-        The Website may provide links to third-party websites. Our Company is
-        not responsible for their privacy practices or content. Users should
-        read their privacy policies before interacting with them.
-      </p>
+        <h2 className="padd">Third-Party Links</h2>
+        <p>
+          Our website may include links to third-party websites or integrations (e.g., payment processors). 
+          TRUOWNERS is not responsible for their content or privacy practices. Please review their respective 
+          privacy policies.
+        </p>
 
-      <h2 className='padd' >General Terms</h2>
-      <p>
-        This Policy is part of the Website’s Terms of Use and Terms and
-        Conditions of Sale. User Information may be stored and processed
-        internationally in compliance with applicable laws.
-      </p>
-</section>
-        </div>
-    );
+        <h2 className="padd">Your Rights</h2>
+        <ul>
+          <li>Access, correct, or update your personal information.</li>
+          <li>Request deletion of your account or data (subject to legal or contractual obligations).</li>
+          <li>Withdraw consent for marketing communications at any time.</li>
+        </ul>
+
+        <h2 className="padd">Contact Us</h2>
+        <p>
+          If you have any questions or concerns about this Privacy Policy or how your information 
+          is handled, please contact us at:  
+          <br />
+          <strong>Email:</strong> Truowners@gmail.com
+          <br />
+          <strong>Address:</strong> Ground floor no 100 corner shop 13th main 27th cross,28th B cross 4th block,Jayanagar
+        </p>
+
+        <h2 className="padd">Policy Updates</h2>
+        <p>
+          This Privacy Policy may be updated periodically. We encourage users to review this page 
+          regularly to stay informed about any changes.
+        </p>
+      </section>
+    </div>
+  );
 };
 
-export default  PrivacyPolicy;
+export default PrivacyPolicy;

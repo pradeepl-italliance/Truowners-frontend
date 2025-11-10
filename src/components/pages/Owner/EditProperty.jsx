@@ -289,91 +289,127 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
     return true;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-  
-    setLoading(true);
-    setError('');
-  
-    try {
-      const newMediaUrls = await uploadAllMedia();
-      const allMediaUrls = [...existingImages, ...newMediaUrls];
-      
-      const response = await fetch(`${buildApiUrl(API_CONFIG.OWNER.PROPERTIES)}/${property.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          location: {
-            address: formData.location.address,
-            city: formData.location.city,
-            state: formData.location.state,
-            country: formData.location.country,
-            pincode: formData.location.pincode,
-            googleMapsLink: formData.location.googleMapsLink
-          },
-          rent: parseInt(formData.rent),
-          deposit: parseInt(formData.deposit),
-          propertyType: formData.propertyType,
-          bedrooms: parseInt(formData.bedrooms),
-          bathrooms: parseInt(formData.bathrooms),
-          area: parseInt(formData.area),
-          amenities: formData.amenities,
-          images: allMediaUrls
-        }),
-      });
-  
-      let data;
-      try {
-        data = await response.json();
-        validateApiResponse(data);
-      } catch (parseError) {
-        throw new Error('Invalid response from server');
-      }
-  
-      if (!response.ok) {
-        throw new Error(data.error || handleApiError(null, response));
-      }
-  
-      if (data.success) {
-        setSuccessProperty(data.data);
-        setShowSuccess(true);
-        onSuccess && onSuccess({ property: data.data });
-        onComplete && onComplete();
-      } else {
-        throw new Error(getErrorMessage(data));
-      }
-    } catch (err) {
-      console.error('Edit property error:', err);
-      setError(err.message || 'Failed to update property. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  return (
-    <>
-      {/* Success Modal - Rendered at root level */}
-      {showSuccess && (
-        <div className="modal-backdrop" onClick={() => setShowSuccess(false)}>
-          <div className="modal-wrapper" onClick={(e) => e.stopPropagation()}>
-            <PropertySuccessModal
-              onClose={() => {
-                setShowSuccess(false);
-                onClose(); // Close the entire edit form after success
-              }}
-              property={successProperty}
-              message="Property updated successfully!"
-            />
-          </div>
-        </div>
-      )}
+  if (!validateForm()) return;
+
+  setLoading(true);
+  setError('');
+
+  try {
+    // Upload any new media files
+    const newMediaUrls = await uploadAllMedia();
+    const allMediaUrls = [...existingImages, ...newMediaUrls];
+
+    // Send PATCH request to update property
+    const response = await fetch(`${buildApiUrl(API_CONFIG.OWNER.PROPERTIES)}/${property.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title: formData.title,
+        description: formData.description,
+        location: {
+          address: formData.location.address,
+          city: formData.location.city,
+          state: formData.location.state,
+          country: formData.location.country,
+          pincode: formData.location.pincode,
+          googleMapsLink: formData.location.googleMapsLink
+        },
+        rent: parseInt(formData.rent),
+        deposit: parseInt(formData.deposit),
+        propertyType: formData.propertyType,
+        bedrooms: parseInt(formData.bedrooms),
+        bathrooms: parseInt(formData.bathrooms),
+        area: parseInt(formData.area),
+        amenities: formData.amenities,
+        images: allMediaUrls
+      }),
+    });
+
+    let data;
+    try {
+      data = await response.json();
+      validateApiResponse(data);
+    } catch (parseError) {
+      throw new Error('Invalid response from server');
+    }
+
+    if (!response.ok) {
+      throw new Error(data.error || handleApiError(null, response));
+    }
+
+    // --- Key Changes: Update formData & media to allow further edits ---
+   if (data.success) {
+  // update form data but keep form editable
+  setFormData({
+    title: data.data.title || '',
+    description: data.data.description || '',
+    location: {
+      address: data.data.location?.address || '',
+      city: data.data.location?.city || '',
+      state: data.data.location?.state || '',
+      country: data.data.location?.country || '',
+      pincode: data.data.location?.pincode || '',
+      googleMapsLink: data.data.location?.googleMapsLink || ''
+    },
+    rent: data.data.rent || '',
+    deposit: data.data.deposit || '',
+    propertyType: data.data.propertyType || 'apartment',
+    bedrooms: data.data.bedrooms || '',
+    bathrooms: data.data.bathrooms || '',
+    area: data.data.area || '',
+    amenities: data.data.amenities || []
+  });
+
+  setExistingImages(data.data.images || []);
+  const previews = (data.data.images || []).map((image, index) => ({
+    id: `existing-${index}`,
+    type: 'image',
+    url: image,
+    name: `image-${index}`,
+    isExisting: true
+  }));
+  setMediaPreviews(previews);
+
+  setSuccessProperty(data.data);
+  setShowSuccess(true);
+
+  // Call callbacks but do NOT close form
+  onSuccess && onSuccess({ property: data.data });
+  onComplete && onComplete();
+
+
+    } else {
+      throw new Error(getErrorMessage(data));
+    }
+  } catch (err) {
+    console.error('Edit property error:', err);
+    setError(err.message || 'Failed to update property. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+return (
+  <>
+    {/* Success Modal - Rendered at root level */}
+    {showSuccess && (
+  <div className="modal-backdrop" onClick={() => setShowSuccess(false)}>
+    <div className="modal-wrapper" onClick={(e) => e.stopPropagation()}>
+      <PropertySuccessModal
+        onClose={() => setShowSuccess(false)} // just close the modal
+        property={successProperty}
+        message="Property updated successfully!"
+      />
+    </div>
+  </div>
+)}
+
 
       {/* Edit Property Form */}
       <div className="auth-overlay">
@@ -654,15 +690,15 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
                 <label htmlFor="media">Upload Images & Videos</label>
                 
                 <div className="file-upload-area">
-                  <input
-                    type="file"
-                    id="media"
-                    accept={[...allowedTypes.images, ...allowedTypes.videos].join(',')}
-                    multiple
-                    onChange={handleMediaChange}
-                    className="file-input"
-                    disabled={uploadingMedia || loading}
-                  />
+                 <input
+  type="file"
+  id="media"
+  accept={[...allowedTypes.images, ...allowedTypes.videos].join(',')}
+  multiple
+  onChange={handleMediaChange}
+  className="file-input"
+/>
+
                   <label htmlFor="media" className="file-upload-label">
                     <div className="upload-icon">📷📹</div>
                     <div className="upload-text">
@@ -698,13 +734,13 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
                           <div className="media-preview-overlay">
                             <span className="media-name">{preview.name}</span>
                             <button
-                              type="button"
-                              className="remove-media-btn"
-                              onClick={() => removeMedia(preview.id)}
-                              disabled={uploadingMedia || loading}
-                            >
-                              ×
-                            </button>
+  type="button"
+  className="remove-media-btn"
+  onClick={() => removeMedia(preview.id)}
+>
+  ×
+</button>
+
                           </div>
 
                           {uploadingMedia && uploadProgress[preview.name] !== undefined && (

@@ -1,16 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Typography, Button, Paper, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const ProcessingPage = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/"); // Optional: auto-redirect if processing takes too long
-    }, 10000); // 10 seconds
-    return () => clearTimeout(timer);
-  }, [navigate]);
 
   return (
     <Box
@@ -44,9 +37,6 @@ const ProcessingPage = () => {
         >
           Back to Home
         </Button>
-        <Typography variant="caption" display="block" sx={{ mt: 2 }}>
-          Redirecting to home in 10 seconds...
-        </Typography>
       </Paper>
     </Box>
   );

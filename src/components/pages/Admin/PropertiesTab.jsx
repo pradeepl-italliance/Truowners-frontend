@@ -262,7 +262,7 @@ const PropertiesTab = () => {
         body = JSON.stringify({ status: newStatus });
         break;
       case 'markSold':
-      case 'unsold':
+      case 'published':
         endpoint = API_CONFIG.ADMIN.PUBLISH_PROPERTY.replace(':id', propertyId);
         body = JSON.stringify({ status: newStatus });
         break;
@@ -1206,7 +1206,7 @@ const PropertiesTab = () => {
       onClick={() => handlePropertyAction(selectedProperty.id, 'unsold', 'published')}
       startIcon={actionLoading ? <CircularProgress size={16} /> : <Publish />}
     >
-      Unsold
+      Published
     </Button>
   )}
 </DialogActions>

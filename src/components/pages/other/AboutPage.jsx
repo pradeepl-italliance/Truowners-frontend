@@ -21,14 +21,7 @@ const AboutPage = () => {
         <div className="text-container">
           <h2 className="head2">Who We Are</h2>
           <p className="head2-para">
-            At TruOwner, we make renting a home in Bangalore simple and stress-free. 
-            With over 12 years of experience, founder <strong>Ganesh Gopal Krishna</strong> and his team 
-            have helped more than 2500 families find homes that fit their 
-            budget and lifestyle. Built to remove rental hassles like high brokerage, 
-            limited choices, and unclear terms, TruOwner offers verified, affordable 
-            rental and lease options. Whether you're a student, professional, or family, 
-            we provide trusted listings, digital convenience, and personalized service — 
-            so you don’t just find a house, you feel at home.
+            TruOwners is a premier, broker-free platform designed to connect property owners and potential buyers/tenants directly. Sellers can easily register and post verified property listings on our site. Buyers can browse thousands of genuine ads, eliminating the need for intermediaries, and contact the owners directly to negotiate and finalize deals. To enhance the experience and unlock exclusive benefits, we offer users an optional TruOwners Premium subscription.
           </p>
         </div>
       </section>

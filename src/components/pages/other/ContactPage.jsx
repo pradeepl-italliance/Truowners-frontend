@@ -28,7 +28,7 @@ const ContactPage = () => {
               <FaPhoneAlt className="icon" />
               <div>
                 <h4>Phone</h4>
-                <p>+91 8095511561 </p>
+                <p>+91  8867721812 </p>
               </div>
             </li>
             <li>

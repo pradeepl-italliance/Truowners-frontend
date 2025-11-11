@@ -244,19 +244,20 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
   };
 
   // suggested min/max based on selected status tab
-  const getSuggestedRange = (tabIndex) => {
-    switch (tabIndex) {
-      case 1: // FOR RENT
-      case 4: // FOR COMMERCIAL
-        return [5000, 500000];      // ₹5K - ₹5L
-      case 3: // FOR LEASE
-        return [500000, 2000000];   // ₹5L - ₹20L
-      case 2: // FOR SALE
-        return [1000000, 30000000]; // ₹10L - ₹3Cr
-      default:
-        return [5000, 30000000];    // full range
-    }
-  };
+const getSuggestedRange = (tab) => {
+  switch (tab) {
+    case 1: // Rent
+      return [5000, 500000]; // 5K – 5 Lakh
+    case 2: // Sale
+      return [1000000, 30000000]; // ✅ 10 Lakh – 3 Crore
+    case 3: // Lease
+      return [500000, 2000000]; // ✅ 5 Lakh – 20 Lakh
+    case 4: // Commercial
+      return [5000, 5000000]; // 5K – 50 Lakh
+    default: // All or unselected
+      return [5000, 30000000];
+  }
+};
 
              const [statusTab, setStatusTab] = useState(0);
   const [showMoreFilters, setShowMoreFilters] = useState();
@@ -267,11 +268,34 @@ export default function FilterSidebar({ initialFilters = {}, currentFilters = {}
   // Custom range slider state (₹5K → ₹3Cr)
   const [customRange, setCustomRange] = useState([5000, 30000000]);
 
-  // 🔄 Auto-update custom range when tab changes (Rent / Sale / Lease / Commercial)
-  useEffect(() => {
-    const [min, max] = getSuggestedRange(statusTab);
-    setCustomRange([min, max]);
-  }, [statusTab]);
+useEffect(() => {
+  const [min, max] = getSuggestedRange(statusTab);
+  setCustomRange([min, max]);
+
+  setFilters((prev) => ({
+    ...prev,
+    rentRange: [min, max],
+    budgetRange: [min, max],
+    rentMin: String(min),
+    rentMax: String(max),
+    budgetMin: String(min),
+    budgetMax: String(max),
+    minPrice: String(min),
+    maxPrice: String(max),
+  }));
+}, [statusTab]);
+// ✅ Keep filters.minPrice and filters.maxPrice in sync with customRange (for Sale & Lease)
+useEffect(() => {
+  setFilters((prev) => ({
+    ...prev,
+    minPrice: customRange[0],
+    maxPrice: customRange[1],
+  }));
+}, [customRange]);
+
+
+
+
 
 
   const lastSearchRef = useRef("");
@@ -367,27 +391,39 @@ const handleSearchClick = () => {
 
   params.append("status", statusValue);
 
+  // Common filters
   if (filters.propertyType) params.append("propertyType", filters.propertyType);
   if (filters.city) params.append("city", filters.city);
   if (filters.bedrooms) params.append("bedrooms", filters.bedrooms);
   if (filters.search) params.append("search", filters.search);
-  if (filters.amenities && filters.amenities.length > 0) params.append("amenities", filters.amenities);
   if (filters.title) params.append("title", filters.title);
-  if (filters.budgetRange[0] > 0) params.append("minBudget", filters.budgetRange[0]);
-  if (filters.budgetRange[1] < 100000) params.append("maxBudget", filters.budgetRange[1]);
-  if ((statusValue === "Rent" || statusValue === "Commercial") && filters.rentRange[0] > 0) {
-    params.append("minRent", filters.rentRange[0]);
+  if (filters.amenities && filters.amenities.length > 0)
+    params.append("amenities", filters.amenities.join(","));
+
+  // ✅ Use correct min/max depending on tab
+  let minRange, maxRange;
+
+  if (statusTab === 3) {
+    // For Lease tab → take from filters if available
+    minRange = filters.minPrice || filters.rentMin || customRange[0];
+    maxRange = filters.maxPrice || filters.rentMax || customRange[1];
+  } else {
+    // For other tabs → use customRange directly
+    [minRange, maxRange] = customRange;
   }
-  if ((statusValue === "Rent" || statusValue === "Commercial") && filters.rentRange[1] < 50000) {
-    params.append("maxRent", filters.rentRange[1]);
-  }
+
+  params.append("minPrice", minRange);
+  params.append("maxPrice", maxRange);
 
   lastSearchRef.current = filters.search;
 
-  onSearch(params.toString(), { ...filters, status: statusValue });
+  onSearch(params.toString(), {
+    ...filters,
+    status: statusValue,
+    minRange,
+    maxRange,
+  });
 };
-
-
 
   const handleClearFilters = () => {
     setFilters(defaultFilters);
@@ -576,24 +612,24 @@ const handleSearchClick = () => {
 
 {showMoreFilters === true ? (
   <>
-    {/* <Grid container spacing={4} justifyContent="center" display={"flex"}> */}
-
-    {/* --- Rent Range (Dynamic ₹ Range like screenshot, no dollar icon) --- */}
+    {/* --- Universal Price Range (Works for Rent, Sale, Lease, Commercial) --- */}
     <Grid item xs={12} md={5} maxWidth={"350px"}>
       <SectionLabel>
-        RENT RANGE ₹{formatCurrencyShort(customRange[0])} – ₹{formatCurrencyShort(customRange[1])}
+        PRICE RANGE ₹{formatCurrencyShort(customRange[0])} – ₹{formatCurrencyShort(customRange[1])}
       </SectionLabel>
 
       <SliderContainer>
         <Box sx={{ mb: 2 }}>
           <Slider
-            value={customRange}
+            value={customRange || [0, 0]}
             onChange={(e, newValue) => setCustomRange(newValue)}
-            onChangeCommitted={() => {
-              const [min, max] = getSuggestedRange(statusTab);
-              if (customRange[0] < min || customRange[1] > max) {
-                setCustomRange([min, max]);
-              }
+            onChangeCommitted={(e, newValue) => {
+              // ✅ Update filters when user finishes dragging
+              setFilters((prev) => ({
+                ...prev,
+                minPrice: newValue[0],
+                maxPrice: newValue[1],
+              }));
             }}
             valueLabelDisplay="off"
             min={5000}
@@ -615,9 +651,7 @@ const handleSearchClick = () => {
     <Grid item xs={12} md={5} maxWidth={"350px"}>
       {(statusTab === 1 || statusTab === 4) && (
         <>
-          <SectionLabel>
-            RENT RANGE
-          </SectionLabel>
+          <SectionLabel>RENT RANGE</SectionLabel>
           <SliderContainer>
             <Box sx={{ mb: 2 }}>
               <Slider
@@ -695,8 +729,6 @@ const handleSearchClick = () => {
         </FormGroup>
       </Grid>
     </Grid>
-
-    {/* </Grid> */}
   </>
 ) : (
   <></>

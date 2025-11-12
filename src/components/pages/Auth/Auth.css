@@ -1,98 +1,90 @@
 /* Auth Modal Overlay */
 .auth-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    padding: var(--spacing-4);
-  }
-  
-  .auth-modal {
-    position: relative;
-    background: var(--white);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-   max-width: 600px ; 
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    padding:50px;
-  }
-  
-  .auth-header {
-    padding: var(--spacing-8) var(--spacing-6) var(--spacing-4);
-    text-align: center;
-    border-bottom: 1px solid var(--gray-200);
-    position: relative;
-  }
-  
-  .auth-header h2 {
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    color: var(--gray-900);
-    margin-bottom: 5px;
-  }
-  
-  .auth-header p {
-    color: var(--gray-600);
-    font-size: var(--font-size-sm);
-    margin: 0;
-  }
-  
-  .email-highlight {
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: var(--font-size-base) !important;
-    margin-top: var(--spacing-1) !important;
-  }
-  
-  .auth-modal {
-    position: relative;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    width: 100%;
-     max-width: 600px; 
-    max-height: 90vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  
-  .auth-close {
-    position: absolute;
-    /* top: 16px;
-    right: 16px;
-    width: 32px;
-    height: 32px; */
-    top: 4%;
-    right: 7%;
-    width: 47px;
-    height: 42px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    color: #333;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    border: none;
-    cursor: pointer;
-  }
-  
-  
-  
-  .auth-close:hover {
-    background: var(--gray-200);
-    color: var(--gray-800);
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-4);
+
+
+}
+
+
+.auth-modal {
+  position: relative;
+  z-index: 2100;
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 50px;
+}
+
+
+
+/* header section — unchanged */
+.auth-header {
+  padding: var(--spacing-8) var(--spacing-6) var(--spacing-4);
+  text-align: center;
+  border-bottom: 1px solid var(--gray-200);
+  position: relative;
+}
+
+.auth-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 5px;
+}
+
+.auth-header p {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* highlight email text */
+.email-highlight {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: var(--font-size-base) !important;
+  margin-top: var(--spacing-1) !important;
+}
+
+/* close button */
+.auth-close {
+  position: absolute;
+  top: 4%;
+  right: 7%;
+  width: 47px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #333;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2200; /* ✅ keep above modal content */
+  border: none;
+  cursor: pointer;
+}
+
+.auth-close:hover {
+  background: var(--gray-200);
+  color: var(--gray-800);
+}
+
   
   /* Auth Form */
   .auth-form {

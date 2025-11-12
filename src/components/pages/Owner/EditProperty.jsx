@@ -82,6 +82,9 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
           isExisting: true
         }));
         setMediaPreviews(previews);
+      } else {
+        setExistingImages([]);
+        setMediaPreviews([]);
       }
     }
   }, [property]);
@@ -343,47 +346,44 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
       throw new Error(data.error || handleApiError(null, response));
     }
 
-    // --- Key Changes: Update formData & media to allow further edits ---
-   if (data.success) {
-  // update form data but keep form editable
-  setFormData({
-    title: data.data.title || '',
-    description: data.data.description || '',
-    location: {
-      address: data.data.location?.address || '',
-      city: data.data.location?.city || '',
-      state: data.data.location?.state || '',
-      country: data.data.location?.country || '',
-      pincode: data.data.location?.pincode || '',
-      googleMapsLink: data.data.location?.googleMapsLink || ''
-    },
-    rent: data.data.rent || '',
-    deposit: data.data.deposit || '',
-    propertyType: data.data.propertyType || 'apartment',
-    bedrooms: data.data.bedrooms || '',
-    bathrooms: data.data.bathrooms || '',
-    area: data.data.area || '',
-    amenities: data.data.amenities || []
-  });
+    if (data.success) {
+      // Update state for further edits (keeps form editable)
+      setFormData({
+        title: data.data.title || '',
+        description: data.data.description || '',
+        location: {
+          address: data.data.location?.address || '',
+          city: data.data.location?.city || '',
+          state: data.data.location?.state || '',
+          country: data.data.location?.country || '',
+          pincode: data.data.location?.pincode || '',
+          googleMapsLink: data.data.location?.googleMapsLink || ''
+        },
+        rent: data.data.rent || '',
+        deposit: data.data.deposit || '',
+        propertyType: data.data.propertyType || 'apartment',
+        bedrooms: data.data.bedrooms || '',
+        bathrooms: data.data.bathrooms || '',
+        area: data.data.area || '',
+        amenities: data.data.amenities || []
+      });
 
-  setExistingImages(data.data.images || []);
-  const previews = (data.data.images || []).map((image, index) => ({
-    id: `existing-${index}`,
-    type: 'image',
-    url: image,
-    name: `image-${index}`,
-    isExisting: true
-  }));
-  setMediaPreviews(previews);
+      setExistingImages(data.data.images || []);
+      const previews = (data.data.images || []).map((image, index) => ({
+        id: `existing-${index}`,
+        type: 'image',
+        url: image,
+        name: `image-${index}`,
+        isExisting: true
+      }));
+      setMediaPreviews(previews);
 
-  setSuccessProperty(data.data);
-  setShowSuccess(true);
+      setSuccessProperty(data.data);
+      setShowSuccess(true);
 
-  // Call callbacks but do NOT close form
-  onSuccess && onSuccess({ property: data.data });
-  onComplete && onComplete();
-
-
+      // Call callbacks but do NOT close form (we want user to keep editing)
+      onSuccess && onSuccess({ property: data.data });
+      onComplete && onComplete();
     } else {
       throw new Error(getErrorMessage(data));
     }
@@ -395,25 +395,34 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
   }
 };
 
-return (
-  <>
-    {/* Success Modal - Rendered at root level */}
-    {showSuccess && (
-  <div className="modal-backdrop" onClick={() => setShowSuccess(false)}>
-    <div className="modal-wrapper" onClick={(e) => e.stopPropagation()}>
-      <PropertySuccessModal
-        onClose={() => setShowSuccess(false)} // just close the modal
-        property={successProperty}
-        message="Property updated successfully!"
-      />
-    </div>
-  </div>
-)}
+  // Auto-dismiss the success toast after a short time (non-blocking)
+  useEffect(() => {
+    if (!showSuccess) return;
+    const t = setTimeout(() => setShowSuccess(false), 2500);
+    return () => clearTimeout(t);
+  }, [showSuccess]);
 
-
-      {/* Edit Property Form */}
+  return (
+    <>
+      {/* NOTE: success notification is rendered INSIDE the modal as a non-blocking toast
+          so it does NOT block editing. */}
+      
+      {/* ✅ Edit Property Modal */}
       <div className="auth-overlay">
+        {/* The modal container — sits ABOVE the overlay */}
         <div className="auth-modal property-modal">
+          {/* non-blocking success toast (appears top-right inside modal) */}
+          {showSuccess && successProperty && (
+            <div className="success-toast" role="status" aria-live="polite">
+              <PropertySuccessModal
+                onClose={() => setShowSuccess(false)}
+                property={successProperty}
+                message="Property updated successfully!"
+                // If PropertySuccessModal expects an overlay, ensure it can render without its own backdrop.
+              />
+            </div>
+          )}
+
           <div className="auth-header">
             <h2>Edit Property</h2>
             <p>Update your property details</p>
@@ -426,14 +435,14 @@ return (
             {error && (
               <div className="auth-error">
                 <span>⚠️</span>
-                <div style={{ whiteSpace: 'pre-line' }}>{error}</div>
+                <div style={{ whiteSpace: "pre-line" }}>{error}</div>
               </div>
             )}
 
-            {/* Basic Information */}
+            {/* --- Basic Information --- */}
             <div className="form-section">
               <h3 className="section-title">Basic Information</h3>
-              
+
               <div className="form-group">
                 <label htmlFor="title">Property Title *</label>
                 <input
@@ -461,11 +470,17 @@ return (
               </div>
             </div>
 
-            {/* Location Information */}
+            {/* ... rest of form stays unchanged ... */}
+            {/* I kept the rest of your form exactly as-is. */}
+            {/* --- Location, Property Details, Amenities, Media, Submit Button --- */}
+
+            {/* --- Location Information --- */}
             <div className="form-section">
               <h3 className="section-title">Location Information</h3>
-              <p className="section-subtitle">Provide detailed address information for your property</p>
-              
+              <p className="section-subtitle">
+                Provide detailed address information for your property
+              </p>
+
               <div className="form-group">
                 <label htmlFor="address">Street Address *</label>
                 <input
@@ -563,10 +578,10 @@ return (
               </div>
             </div>
 
-            {/* Property Details */}
+            {/* --- Property Details --- */}
             <div className="form-section">
               <h3 className="section-title">Property Details</h3>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="propertyType">Property Type *</label>
@@ -661,13 +676,15 @@ return (
               </div>
             </div>
 
-            {/* Amenities */}
+            {/* --- Amenities --- */}
             <div className="form-section">
               <h3 className="section-title">Amenities</h3>
-              <p className="section-subtitle">Select all amenities available in your property</p>
-              
+              <p className="section-subtitle">
+                Select all amenities available in your property
+              </p>
+
               <div className="amenities-grid">
-                {amenitiesList.map(amenity => (
+                {amenitiesList.map((amenity) => (
                   <label key={amenity} className="amenity-checkbox">
                     <input
                       type="checkbox"
@@ -681,23 +698,25 @@ return (
               </div>
             </div>
 
-            {/* Media Upload Section */}
+            {/* --- Media Upload Section --- */}
             <div className="form-section">
               <h3 className="section-title">Property Media</h3>
-              <p className="section-subtitle">Upload high-quality images and videos to showcase your property</p>
-              
+              <p className="section-subtitle">
+                Upload high-quality images and videos to showcase your property
+              </p>
+
               <div className="form-group">
                 <label htmlFor="media">Upload Images & Videos</label>
-                
+
                 <div className="file-upload-area">
-                 <input
-  type="file"
-  id="media"
-  accept={[...allowedTypes.images, ...allowedTypes.videos].join(',')}
-  multiple
-  onChange={handleMediaChange}
-  className="file-input"
-/>
+                  <input
+                    type="file"
+                    id="media"
+                    accept={[...allowedTypes.images, ...allowedTypes.videos].join(",")}
+                    multiple
+                    onChange={handleMediaChange}
+                    className="file-input"
+                  />
 
                   <label htmlFor="media" className="file-upload-label">
                     <div className="upload-icon">📷📹</div>
@@ -705,7 +724,8 @@ return (
                       <strong>Click to upload</strong> or drag and drop
                     </div>
                     <div className="upload-hint">
-                      Images: JPG, PNG, WebP (max 10MB each)<br />
+                      Images: JPG, PNG, WebP (max 10MB each)
+                      <br />
                       Videos: MP4, WebM, MOV (max 100MB each)
                     </div>
                   </label>
@@ -715,42 +735,44 @@ return (
                   <div className="media-previews-container">
                     <h4>Selected Media ({mediaPreviews.length})</h4>
                     <div className="media-previews-grid">
-                      {mediaPreviews.map(preview => (
+                      {mediaPreviews.map((preview) => (
                         <div key={preview.id} className="media-preview-item">
-                          {preview.type === 'image' ? (
-                            <img 
-                              src={preview.url} 
+                          {preview.type === "image" ? (
+                            <img
+                              src={preview.url}
                               alt={preview.name}
                               className="media-preview-image"
                             />
                           ) : (
-                            <video 
+                            <video
                               src={preview.url}
                               className="media-preview-video"
                               controls
                             />
                           )}
-                          
+
                           <div className="media-preview-overlay">
                             <span className="media-name">{preview.name}</span>
                             <button
-  type="button"
-  className="remove-media-btn"
-  onClick={() => removeMedia(preview.id)}
->
-  ×
-</button>
-
+                              type="button"
+                              className="remove-media-btn"
+                              onClick={() => removeMedia(preview.id)}
+                            >
+                              ×
+                            </button>
                           </div>
 
-                          {uploadingMedia && uploadProgress[preview.name] !== undefined && (
-                            <div className="upload-progress">
-                              <div 
-                                className="upload-progress-bar"
-                                style={{ width: `${uploadProgress[preview.name]}%` }}
-                              />
-                            </div>
-                          )}
+                          {uploadingMedia &&
+                            uploadProgress[preview.name] !== undefined && (
+                              <div className="upload-progress">
+                                <div
+                                  className="upload-progress-bar"
+                                  style={{
+                                    width: `${uploadProgress[preview.name]}%`,
+                                  }}
+                                />
+                              </div>
+                            )}
                         </div>
                       ))}
                     </div>
@@ -759,8 +781,9 @@ return (
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            {/* --- Submit Button --- */}
+            <button
+              type="submit"
               className="btn btn-primary btn-full"
               disabled={loading || uploadingMedia}
             >
@@ -775,7 +798,7 @@ return (
                   Updating Property...
                 </>
               ) : (
-                'Update Property'
+                "Update Property"
               )}
             </button>
           </form>

@@ -403,14 +403,21 @@ const handleSearchClick = () => {
   // ✅ Use correct min/max depending on tab
   let minRange, maxRange;
 
-  if (statusTab === 3) {
-    // For Lease tab → take from filters if available
-    minRange = filters.minPrice || filters.rentMin || customRange[0];
-    maxRange = filters.maxPrice || filters.rentMax || customRange[1];
-  } else {
-    // For other tabs → use customRange directly
-    [minRange, maxRange] = customRange;
-  }
+  // use numeric values (prefer filters for Sale & Lease)
+if (statusTab === 2 || statusTab === 3) { 
+  // prefer explicit numeric filters.minPrice/maxPrice, fallback to customRange
+  minRange = (filters.minPrice !== undefined && filters.minPrice !== "") 
+    ? Number(filters.minPrice) 
+    : Number(customRange[0]);
+  maxRange = (filters.maxPrice !== undefined && filters.maxPrice !== "") 
+    ? Number(filters.maxPrice) 
+    : Number(customRange[1]);
+} else {
+  // Rent / Commercial / All -> rely on customRange (existing working behavior)
+  minRange = Number(customRange[0]);
+  maxRange = Number(customRange[1]);
+}
+
 
   params.append("minPrice", minRange);
   params.append("maxPrice", maxRange);
@@ -622,13 +629,27 @@ const handleSearchClick = () => {
         <Box sx={{ mb: 2 }}>
           <Slider
             value={customRange || [0, 0]}
-            onChange={(e, newValue) => setCustomRange(newValue)}
+            onChange={(e, newValue) => {
+              // Update visual range
+              setCustomRange(newValue);
+
+              // ✅ Keep filters in sync immediately for SALE (2) and LEASE (3)
+              if (statusTab === 2 || statusTab === 3) {
+                setFilters((prev) => ({
+                  ...prev,
+                  minPrice: Number(newValue[0]),
+                  maxPrice: Number(newValue[1]),
+                  budgetRange: [Number(newValue[0]), Number(newValue[1])],
+                }));
+              }
+            }}
             onChangeCommitted={(e, newValue) => {
-              // ✅ Update filters when user finishes dragging
+              // ✅ Finalize update when user releases slider
               setFilters((prev) => ({
                 ...prev,
-                minPrice: newValue[0],
-                maxPrice: newValue[1],
+                minPrice: Number(newValue[0]),
+                maxPrice: Number(newValue[1]),
+                budgetRange: [Number(newValue[0]), Number(newValue[1])],
               }));
             }}
             valueLabelDisplay="off"
@@ -646,6 +667,7 @@ const handleSearchClick = () => {
         </Box>
       </SliderContainer>
     </Grid>
+ 
 
     {/* --- RENT RANGE Section (unchanged, used for rent-specific filters) --- */}
     <Grid item xs={12} md={5} maxWidth={"350px"}>

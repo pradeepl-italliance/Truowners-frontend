@@ -76,9 +76,9 @@ const PrivacyPolicy = () => {
 
         <h2 className="padd">Your Rights</h2>
         <ul>
-          <li>Access, correct, or update your personal information.</li>
-          <li>Request deletion of your account or data (subject to legal or contractual obligations).</li>
-          <li>Withdraw consent for marketing communications at any time.</li>
+          <li>  Access, correct, or update your personal information.</li>
+          <li>  Request deletion of your account or data (subject to legal or contractual obligations).</li>
+          <li>  Withdraw consent for marketing communications at any time.</li>
         </ul>
 
         <h2 className="padd">Contact Us</h2>

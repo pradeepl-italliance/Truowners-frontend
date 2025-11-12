@@ -21,6 +21,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+   FormGroup,          // <-- Add this
+  FormControlLabel, 
+  Checkbox, 
   Grid,
   Card,
   CardContent,
@@ -72,6 +75,9 @@ import {
   CheckCircleOutline
 } from '@mui/icons-material';
 import { buildApiUrl, API_CONFIG } from '../../../config/api';
+import RoomIcon from '@mui/icons-material/Room';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const PropertiesTab = () => {
   const theme = useTheme();
@@ -81,6 +87,11 @@ const PropertiesTab = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [statusBreakdown, setStatusBreakdown] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+const amenitiesList = [
+  'WiFi', 'Parking', 'Gym', 'Swimming Pool', 'Security', 'Elevator',
+  'Balcony', 'Garden', 'Furnished', 'Air Conditioning', 'Heating',
+  'Laundry', 'Pet Friendly', 'Near Metro', 'Shopping Mall', 'Hospital'
+];
 
   // API filters matching your backend exactly
   const [apiFilters, setApiFilters] = useState({
@@ -96,6 +107,38 @@ const PropertiesTab = () => {
     bathrooms: '',
     title: '' // Add title filter for search
   });
+// Post Property Modal
+const [postPropertyOpen, setPostPropertyOpen] = useState(false);
+
+// Form Data
+const [newPropertyData, setNewPropertyData] = useState({
+  title: '',
+  description: '',
+  location: {
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    pincode: '',
+    googleMapsLink: ''
+  },
+  propertyType: '',
+  area: '',
+  bedrooms: '',
+  bathrooms: '',
+  rent: '',
+  deposit: '',
+  amenities: [],
+  images: [],
+  videos: []
+});
+const openGoogleMaps = () => {
+  const address = newPropertyData.location.address || '';
+  const query = encodeURIComponent(address);
+  window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+};
+
+const [uploading, setUploading] = useState(false);
 
   // UI State
   const [page, setPage] = useState(0);
@@ -361,35 +404,416 @@ const PropertiesTab = () => {
       </Box>
     );
   }
+const handlePostPropertySubmit = async () => {
+  try {
+    setUploading(true);
+    const token = localStorage.getItem('adminToken');
+    if (!token) throw new Error('Authentication required');
 
-  /* ---------------- Main Render ---------------- */
-  return (
-    <Box>
-      {/* Header with Status Overview */}
-      <Box mb={4}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <DashboardIcon color="primary" fontSize="large" />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
-              Properties Management
+    const formData = new FormData();
+    formData.append('title', newPropertyData.title);
+    formData.append('description', newPropertyData.description);
+    formData.append('propertyType', newPropertyData.propertyType);
+    formData.append('area', newPropertyData.area);
+    formData.append('bedrooms', newPropertyData.bedrooms);
+    formData.append('bathrooms', newPropertyData.bathrooms);
+    formData.append('rent', newPropertyData.rent);
+    formData.append('deposit', newPropertyData.deposit);
+    formData.append('location', JSON.stringify(newPropertyData.location));
+    formData.append('amenities', JSON.stringify(newPropertyData.amenities));
+
+    newPropertyData.images.forEach((file) => {
+      formData.append('images', file);
+    });
+
+    const response = await fetch(buildApiUrl(API_CONFIG.ADMIN.POST_PROPERTY), {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (!data.success) throw new Error(data.error?.message || 'Failed to post property');
+
+    setSnackbar({ open: true, message: 'Property posted successfully', severity: 'success' });
+    setPostPropertyOpen(false);
+    fetchProperties();
+
+  } catch (err) {
+    console.error('Post property error:', err);
+    setSnackbar({ open: true, message: `Error: ${err.message}`, severity: 'error' });
+  } finally {
+    setUploading(false);
+  }
+};
+
+ return (
+  <Box>
+    {/* Header with Status Overview */}
+    <Box mb={4}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Stack direction="column" spacing={1} alignItems="center">
+          {/* (You can keep this empty or remove it if not used) */}
+        </Stack>
+
+         {/* Right-side actions */}
+        <Box display="flex" flexDirection="column" alignItems="flex-end">
+  <Tooltip title="Refresh Data">
+    <IconButton
+      onClick={() => fetchProperties()}
+      disabled={refreshing}
+      sx={{
+        bgcolor: alpha(theme.palette.primary.main, 0.1),
+        '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.2) }
+      }}
+    >
+      <RefreshIcon color="primary" />
+    </IconButton>
+  </Tooltip>
+
+  {/* ✅ Place button directly below refresh */}
+<Button
+  variant="contained"
+  color="primary"
+  size="small"
+  sx={{ mt: 1, textTransform: 'none' }}
+  onClick={() => setPostPropertyOpen(true)}
+>
+  Post Property
+</Button>
+
+</Box>
+</Box>
+
+<Dialog
+  open={postPropertyOpen}
+  onClose={() => setPostPropertyOpen(false)}
+  maxWidth="sm" // reduced width
+  fullWidth
+  PaperProps={{ sx: { borderRadius: 2, p: 0, boxShadow: 'none' } }}
+>
+  {/* Header Section */}
+  <Box textAlign="center" py={3} px={2} borderBottom="1px solid #e0e0e0">
+    <Typography variant="h4" fontWeight={700} mb={1}>
+      Add New Property
+    </Typography>
+    <Typography variant="subtitle1" color="text.secondary">
+      List your property to reach thousands of potential tenants.
+    </Typography>
+  </Box>
+
+  <DialogContent dividers sx={{ maxHeight: '75vh', overflowY: 'auto', px: 3, py: 3 }}>
+    
+    {/* Basic Information Section */}
+    <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
+      <Typography variant="h6" fontWeight={700} mb={2}>
+        Basic Information
+      </Typography>
+      <Stack spacing={2}>
+        <TextField
+          fullWidth
+          required
+          label="Property Title"
+          placeholder="e.g., Modern 2BHK Apartment in Downtown"
+          value={newPropertyData.title}
+          onChange={(e) => setNewPropertyData({ ...newPropertyData, title: e.target.value })}
+          InputProps={{ sx: { color: '#000' }, style: { boxShadow: 'none' } }}
+        />
+        <TextField
+          fullWidth
+          multiline
+          minRows={2}
+          maxRows={4}
+          label="Description"
+          placeholder="Describe your property, its features, and nearby amenities..."
+          value={newPropertyData.description}
+          onChange={(e) => setNewPropertyData({ ...newPropertyData, description: e.target.value })}
+          InputProps={{ sx: { color: '#000' }, style: { boxShadow: 'none' } }}
+        />
+      </Stack>
+    </Paper>
+
+    {/* Location Section */}
+    <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
+      <Typography variant="h6" fontWeight={700} mb={1}>
+        Location Information
+      </Typography>
+      <Typography variant="body2" mb={2} color="text.secondary">
+        Provide detailed address information for your property
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Street Address"
+            placeholder="e.g., MG Road, Bangalore"
+            value={newPropertyData.location.address || ''}
+            onChange={(e) => setNewPropertyData({
+              ...newPropertyData,
+              location: { ...newPropertyData.location, address: e.target.value }
+            })}
+            InputProps={{ sx: { color: '#555' }, style: { boxShadow: 'none' } }}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="City"
+            placeholder="e.g., Bangalore"
+            value={newPropertyData.location.city || ''}
+            onChange={(e) => setNewPropertyData({
+              ...newPropertyData,
+              location: { ...newPropertyData.location, city: e.target.value }
+            })}
+            InputProps={{ sx: { color: '#555' }, style: { boxShadow: 'none' } }}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="State"
+            placeholder="e.g., Karnataka"
+            value={newPropertyData.location.state || ''}
+            onChange={(e) => setNewPropertyData({
+              ...newPropertyData,
+              location: { ...newPropertyData.location, state: e.target.value }
+            })}
+            InputProps={{ sx: { color: '#555' }, style: { boxShadow: 'none' } }}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="Country"
+            placeholder="e.g., India"
+            value={newPropertyData.location.country || ''}
+            onChange={(e) => setNewPropertyData({
+              ...newPropertyData,
+              location: { ...newPropertyData.location, country: e.target.value }
+            })}
+            InputProps={{ sx: { color: '#555' }, style: { boxShadow: 'none' } }}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="Pin Code"
+            placeholder="e.g., 560001"
+            value={newPropertyData.location.pincode || ''}
+            onChange={(e) => setNewPropertyData({
+              ...newPropertyData,
+              location: { ...newPropertyData.location, pincode: e.target.value }
+            })}
+            InputProps={{ sx: { color: '#555' }, style: { boxShadow: 'none' } }}
+          />
+        </Grid>
+
+        {/* Google Maps Link */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Google Maps Link (Optional)"
+            placeholder="Paste Google Maps link here..."
+            value={newPropertyData.location.googleMapsLink || ''}
+            onChange={(e) =>
+              setNewPropertyData({
+                ...newPropertyData,
+                location: { ...newPropertyData.location, googleMapsLink: e.target.value },
+              })
+            }
+          />
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<RoomIcon />}
+            sx={{ mt: 1, borderColor: '#1976d2', color: '#1976d2' }}
+          >
+            Find on Maps
+          </Button>
+          <Box mt={2} p={2} border="1px dashed #1976d2" borderRadius={1}>
+            <Typography variant="body2">
+              How to get Google Maps link:
+              <ol style={{ margin: 0, paddingLeft: '18px' }}>
+                <li>Click "Find on Maps" or go to Google Maps</li>
+                <li>Search for your property address</li>
+                <li>Click on the exact location</li>
+                <li>Click "Share" and copy the link</li>
+                <li>Paste the link above</li>
+              </ol>
             </Typography>
-            <Typography variant="subtitle1" alignItems="baseline" color="text.secondary" fontWeight={600}>
-              Total: {totalCount}
-            </Typography>
-          </Stack>
-          <Tooltip title="Refresh Data">
-            <IconButton
-              onClick={() => fetchProperties()}
-              disabled={refreshing}
-              sx={{
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.2) }
-              }}
+          </Box>
+        </Grid>
+      </Grid>
+    </Paper>
+
+    {/* Property Details Section */}
+    <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
+      <Typography variant="h6" fontWeight={700} mb={2}>
+        Property Details
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>Property Type</InputLabel>
+            <Select
+              value={newPropertyData.propertyType}
+              onChange={(e) => setNewPropertyData({ ...newPropertyData, propertyType: e.target.value })}
             >
-              <RefreshIcon color="primary" />
-            </IconButton>
-          </Tooltip>
-        </Box>
+              {['Apartment', 'House', 'Condo', 'Villa'].map((type) => (
+                <MenuItem key={type} value={type}>{type}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Area (sq ft)"
+            value={newPropertyData.area}
+            onChange={(e) => setNewPropertyData({ ...newPropertyData, area: e.target.value })}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Bedrooms"
+            value={newPropertyData.bedrooms}
+            onChange={(e) => setNewPropertyData({ ...newPropertyData, bedrooms: e.target.value })}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Bathrooms"
+            value={newPropertyData.bathrooms}
+            onChange={(e) => setNewPropertyData({ ...newPropertyData, bathrooms: e.target.value })}
+          />
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Monthly Rent"
+            value={newPropertyData.rent}
+            onChange={(e) => setNewPropertyData({ ...newPropertyData, rent: e.target.value })}
+          />
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Security Deposit"
+            value={newPropertyData.deposit}
+            onChange={(e) => setNewPropertyData({ ...newPropertyData, deposit: e.target.value })}
+          />
+        </Grid>
+      </Grid>
+    </Paper>
+
+    {/* Amenities Section */}
+    <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
+      <Typography variant="h6" fontWeight={700} mb={2}>
+        Amenities
+      </Typography>
+      <Grid container spacing={2}>
+        {[amenitiesList.slice(0, 8), amenitiesList.slice(8, 16)].map((col, i) => (
+          <Grid item xs={12} md={6} key={i}>
+            <Grid container direction="column" spacing={1}>
+              {col.map((amenity) => (
+                <Grid item key={amenity}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={newPropertyData.amenities.includes(amenity)}
+                        onChange={() => {
+                          const newAmenities = newPropertyData.amenities.includes(amenity)
+                            ? newPropertyData.amenities.filter(a => a !== amenity)
+                            : [...newPropertyData.amenities, amenity];
+                          setNewPropertyData({ ...newPropertyData, amenities: newAmenities });
+                        }}
+                      />
+                    }
+                    label={amenity}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        ))}
+      </Grid>
+    </Paper>
+
+    {/* Media Upload Section */}
+    <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
+      <Typography variant="h6" fontWeight={700} mb={1}>
+        Property Media
+      </Typography>
+      <Typography variant="body2" mb={2} color="text.secondary">
+        Upload high-quality images or videos to showcase your property
+      </Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        border="2px dashed #1976d2"
+        borderRadius={2}
+        p={4}
+        textAlign="center"
+        sx={{ cursor: 'pointer' }}
+      >
+        <CameraAltIcon sx={{ fontSize: 50, color: '#1976d2' }} />
+        <Typography mt={1} fontWeight={600}>Click here to upload or drag and drop images</Typography>
+        <Typography variant="caption" color="text.secondary">
+          Images: jpg, png, webp (max 10 MB each), Videos: mp4 (max 50 MB)
+        </Typography>
+        <input
+          hidden
+          type="file"
+          multiple
+          accept="image/*,video/*"
+          onChange={(e) => setNewPropertyData({ ...newPropertyData, mediaFiles: Array.from(e.target.files) })}
+        />
+      </Box>
+    </Paper>
+
+  </DialogContent>
+
+  <DialogActions sx={{ justifyContent: 'center', px: 3, py: 2 }}>
+    <Button
+      variant="contained"
+      onClick={handlePostPropertySubmit}
+      disabled={uploading || !newPropertyData.title || newPropertyData.mediaFiles?.length === 0}
+      sx={{
+        backgroundColor: '#1976d2',
+        color: '#fff', // text is white
+        px: 8, // more horizontal padding
+        py: 1.5,
+        fontWeight: 600,
+        minWidth: 200, // minimum width for the button
+        '&:hover': { 
+          backgroundColor: '#115293', 
+          color: '#fff' 
+        },
+        '&.Mui-disabled': {
+          backgroundColor: '#1976d2', // keep background blue even when disabled
+          color: '#fff', // keep text white when disabled
+          opacity: 1, // remove faded look for disabled button
+        },
+      }}
+    >
+      Add Property
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
+
+
 
         {/* Status Overview Cards */}
         <Grid container spacing={2} mb={3}>

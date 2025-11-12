@@ -21,7 +21,7 @@ const AboutPage = () => {
         <div className="text-container">
           <h2 className="head2">Who We Are</h2>
           <p className="head2-para">
-            TruOwners is a premier, broker-free platform designed to connect property owners and potential buyers/tenants directly. Sellers can easily register and post verified property listings on our site. Buyers can browse thousands of genuine ads, eliminating the need for intermediaries, and contact the owners directly to negotiate and finalize deals. To enhance the experience and unlock exclusive benefits, we offer users an optional TruOwners Premium subscription.
+                TruOwners is a premier, broker-free platform designed to connect property owners and potential buyers/tenants directly. Sellers can easily register and post verified property listings on our site. Buyers can browse thousands of genuine ads, eliminating the need for intermediaries, and contact the owners directly to negotiate and finalize deals. To enhance the experience and unlock exclusive benefits, we offer users an optional TruOwners Premium subscription.
           </p>
         </div>
       </section>
@@ -90,7 +90,7 @@ const AboutPage = () => {
             <li>
               <FaCheckSquare className="icon" />
               <strong className="left-side">Seamless Digital Process:</strong> Enjoy hassle-free
-              renting with digital paperwork and dedicated, end-to-end support.
+                  renting with digital paperwork and dedicated, end-to-end support.
             </li>
             <li>
               <FaCheckSquare className="icon" />

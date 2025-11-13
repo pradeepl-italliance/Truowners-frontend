@@ -585,9 +585,7 @@ const handleSearch = () => {
       {/* Commercial Text Box */}
       <div className="text-box">
         <h2>{propertyData.rightCol.commercial.heading}</h2>
-        <p style={{ fontWeight: 600, fontStyle: 'italic', marginTop: '5px' }}>
-          Commercial
-        </p>
+       
         <p>{propertyData.rightCol.commercial.description}</p>
       </div>
     </div>

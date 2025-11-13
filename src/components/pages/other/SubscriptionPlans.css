@@ -1,39 +1,42 @@
-/* Container Section */
+/* All styles scoped under .subscription-section */
 .subscription-section {
+  position: relative; /* Prevent affecting other sections */
   padding: 80px 20px;
   background-color: #f9f9f9;
   text-align: center;
 }
 
 /* Overview Section */
-.overview {
+.subscription-section .subscription-overview {
   max-width: 750px;
   margin: 0 auto 60px auto;
 }
 
-.section-title {
+.subscription-section .subscription-section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #222;
+  color: #3498db;
   margin-bottom: 12px;
 }
 
-.section-description {
+.subscription-section .subscription-section-description {
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
 }
 
 /* Plans Container */
-.plans-container {
+.subscription-section .subscription-plans-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Individual Plan Card */
-.plan-card {
+.subscription-section .subscription-plan-card {
   width: 320px;
   border-radius: 16px;
   box-shadow: 0 12px 25px rgba(0,0,0,0.1);
@@ -41,54 +44,53 @@
   flex-direction: column;
   transition: transform 0.3s, box-shadow 0.3s;
   overflow: hidden;
-  border: 3px solid #ccc; /* thicker elegant border */
 }
 
-.plan-card:hover {
+.subscription-section .subscription-plan-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 16px 40px rgba(0,0,0,0.15);
 }
 
 /* Plan Header */
-.plan-header {
+.subscription-section .subscription-plan-header {
   padding: 25px 20px 15px 20px;
   text-align: center;
 }
 
-.plan-name {
+.subscription-section .subscription-plan-name {
   font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
-.plan-price {
+.subscription-section .subscription-plan-price {
   font-size: 1.3rem;
   font-weight: 600;
 }
 
-.gst {
+.subscription-section .subscription-gst {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #000000; /* dark black */
+  color: #000;
 }
 
 /* Plan Body */
-.plan-body {
+.subscription-section .subscription-plan-body {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.plan-includes,
-.plan-validity {
+.subscription-section .subscription-plan-includes,
+.subscription-section .subscription-plan-validity {
   font-size: 1rem;
   color: #333;
 }
 
 /* Subscribe Button */
-.subscribe-button {
+.subscription-section .subscription-subscribe-button {
   margin-top: auto;
   padding: 14px 0;
   color: #fff;
@@ -100,41 +102,41 @@
   border: none;
 }
 
-.subscribe-button:hover {
+.subscription-section .subscription-subscribe-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
 /* Tagline */
-.subscription-note {
+.subscription-section .subscription-note {
   margin-top: 30px;
   font-size: 1rem;
 }
 
-.tnc-link {
+.subscription-section .subscription-tnc-link {
   color: #3498db;
   cursor: pointer;
   text-decoration: underline;
 }
 
 /* Light Modal Overlay */
-.modal-overlay {
+.subscription-section .subscription-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5); /* semi-transparent overlay */
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999; /* high, isolated to modal */
 }
 
 /* Modal Content */
-.modal-content-light {
-  background: #ffffff; /* white modal background */
-  color: #000000;       /* dark black text */
+.subscription-section .subscription-modal-content-light {
+  background: #ffffff;
+  color: #000000;
   padding: 30px;
   width: 90%;
   max-width: 600px;
@@ -143,49 +145,54 @@
   position: relative;
   max-height: 80vh;
   overflow-y: auto;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: subscription-fadeIn 0.3s ease-in-out;
   text-align: left;
 }
 
-.close-modal-light {
+.subscription-section .subscription-close-modal-light {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: none;   /* no background */
-  color: #000000;     /* black X */
+  background: none;
+  color: #000000;
   border: none;
-  border-radius: 0;
   width: 30px;
   height: 30px;
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
 }
-
-.modal-summary-light p,
-.modal-summary-light ul {
-  margin: 10px 0;
-  color: #000000; /* dark black text */
+/* Pay Now Button Container (below subscription cards) */
+.subscription-section .subscription-paynow-container {
+  margin-top: 40px; /* distance from subscription cards */
+  display: flex;
+  justify-content: center;
 }
 
-.modal-summary-light ul li {
+.subscription-section .subscription-modal-summary-light p,
+.subscription-section .subscription-modal-summary-light ul {
+  margin: 10px 0;
+  color: #000000;
+}
+
+.subscription-section .subscription-modal-summary-light ul li {
   list-style-type: disc;
   margin-left: 20px;
 }
 
 /* Detailed T&C Link */
-.detailed-tnc-link {
+.subscription-section .subscription-detailed-tnc-link {
   color: #3498db;
   cursor: pointer;
   text-decoration: underline;
 }
 
-.detailed-tnc-link:hover {
+.subscription-section .subscription-detailed-tnc-link:hover {
   color: #1a73e8;
 }
 
 /* Fade-in Animation for Modal */
-@keyframes fadeIn {
+@keyframes subscription-fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }

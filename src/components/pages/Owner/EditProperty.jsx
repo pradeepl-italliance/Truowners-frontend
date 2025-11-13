@@ -470,10 +470,6 @@ const EditProperty = ({ property, onClose, onSuccess, onComplete }) => {
               </div>
             </div>
 
-            {/* ... rest of form stays unchanged ... */}
-            {/* I kept the rest of your form exactly as-is. */}
-            {/* --- Location, Property Details, Amenities, Media, Submit Button --- */}
-
             {/* --- Location Information --- */}
             <div className="form-section">
               <h3 className="section-title">Location Information</h3>

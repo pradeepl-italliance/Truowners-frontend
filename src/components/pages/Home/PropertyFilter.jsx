@@ -46,11 +46,19 @@ const defaultFilters = {
 // ======== Styled Components ========
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   "& .MuiTabs-flexContainer": {
+    display: "flex",
     justifyContent: "center",
-    flexWrap: "wrap",
+    // flexWrap: "wrap",  
     [theme.breakpoints.down(568)]: {
       flexDirection: "column",
       alignItems: "center",
+    },
+    [theme.breakpoints.down(992)]: {
+     display: "grid",
+     gridTemplateColumns: "1fr 1fr",
+     gap: "8px",
+     justifyContent: "center",
+     alignItems: "center",
     },
   },
   "& .MuiTabs-indicator": {
@@ -82,7 +90,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     backgroundColor: "#ffffff",
     transition: "all 0.3s ease",
     width: "100%",
-    height: "56px",
+    height: "40px",
+    maxWidth: "170px",
   },
   "& .MuiInputLabel-root": {
     display: "none",
@@ -94,7 +103,7 @@ const StyledButton = styled(Button)(() => ({
   color: "white",
   fontWeight: "800",
   fontSize: "14px",
-  height: "50px",
+  height: "40px",
   borderRadius: "12px",
   "&:hover": {
     backgroundColor: "#1565c0",

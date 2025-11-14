@@ -12,7 +12,7 @@
   z-index: 2000;
   padding: var(--spacing-4);
 
-
+  pointer-events: none; /* ✅ this allows inputs to be clickable */
 }
 
 
@@ -28,8 +28,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 50px;
-}
 
+  pointer-events: auto; /* ✅ ensure clicks/typing work inside */
+}
 
 
 /* header section — unchanged */

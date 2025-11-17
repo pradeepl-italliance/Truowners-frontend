@@ -432,10 +432,47 @@ const handleSearch = () => {
       </div>
     )
   }
+  
   return (
     <>
       <div className="homepage">
         <div className="container">
+          {/* 🌟 Premium Subscription Banner */}
+<section
+  className="w-full text-center flex items-center justify-center py-20"
+  style={{
+    background: "linear-gradient(180deg, #E1EDFF 0%, #FFFFFF 100%)",
+    color: "#000",
+    marginTop: "0px",
+    paddingTop: "70px",
+    paddingBottom: "70px",
+  }}
+>
+  <div className="max-w-3xl px-6">
+    <h2 className="text-4xl md:text-5xl font-bold mb-3 text-[#1a2a6c]">
+      Upgrade to TruOwners Premium
+    </h2>
+
+    <p className="text-lg md:text-xl mb-8 text-[#333] opacity-80 leading-relaxed">
+      Unlock exclusive benefits, verified property listings, and faster tenant
+      connections. Take your experience to the next level with TruOwners Premium.
+    </p>
+
+    {/* 🔹 Blue Button (white text, slightly rounded corners, bold) */}
+    <button
+      onClick={() => navigate("/subscription-plans")}
+      className="text-white font-extrabold tracking-wide px-7 py-2 transition-all duration-300 hover:scale-105"
+      style={{
+        backgroundColor: "#005FCC", // 🔵 Blue color (same as theme)
+        border: "2px solid #005FCC",
+        borderRadius: "10px", // Slightly rounded corners (not too much)
+        marginTop: "6px",
+      }}
+    >
+      SUBSCRIBE NOW
+    </button>
+  </div>
+</section>
           <section>
             <div className="whole-con" >
               <Container>
@@ -533,6 +570,7 @@ const handleSearch = () => {
       houses.
     </p>
   </div>
+  
   <div className="container-image">
     {/* Left Column */}
     <div className="left-col">
@@ -593,6 +631,7 @@ const handleSearch = () => {
 </section>
 
 </div>
+
           {/* Properties Grid */}
           <div className="properties-section" style={{ background: 'linear-gradient(180deg, #E1EDFF 0%, rgba(255, 255, 255, 0.14) 100%)' }}>
             <div className="properties-header" >
@@ -659,42 +698,6 @@ const handleSearch = () => {
             </div>
 
           </div>
-{/* 🌟 Premium Subscription Banner */}
-<section
-  className="w-full text-center flex items-center justify-center py-20"
-  style={{
-    background: "linear-gradient(180deg, #E1EDFF 0%, #FFFFFF 100%)",
-    color: "#000",
-    marginTop: "0px",
-    paddingTop: "70px",
-    paddingBottom: "70px",
-  }}
->
-  <div className="max-w-3xl px-6">
-    <h2 className="text-4xl md:text-5xl font-bold mb-3 text-[#1a2a6c]">
-      Upgrade to TruOwners Premium
-    </h2>
-
-    <p className="text-lg md:text-xl mb-8 text-[#333] opacity-80 leading-relaxed">
-      Unlock exclusive benefits, verified property listings, and faster tenant
-      connections. Take your experience to the next level with TruOwners Premium.
-    </p>
-
-    {/* 🔹 Blue Button (white text, slightly rounded corners, bold) */}
-    <button
-      onClick={() => navigate("/subscription-plans")}
-      className="text-white font-extrabold tracking-wide px-7 py-2 transition-all duration-300 hover:scale-105"
-      style={{
-        backgroundColor: "#005FCC", // 🔵 Blue color (same as theme)
-        border: "2px solid #005FCC",
-        borderRadius: "10px", // Slightly rounded corners (not too much)
-        marginTop: "6px",
-      }}
-    >
-      SUBSCRIBE NOW
-    </button>
-  </div>
-</section>
           <section className="about-cta">
             <div className="three-column-layout">
               {/* Column 3 (Form) */}
@@ -764,7 +767,7 @@ const handleSearch = () => {
                   color: '#000'
                 }}
               >
-                Testimonials
+              What Our Happy Customers Say
               </h2>
               <p
                 style={{

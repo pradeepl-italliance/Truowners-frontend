@@ -21,6 +21,24 @@ const Login = ({ onClose, onSwitchToSignUp }) => {
   const { login } = useAuth()
   const inputRefs = React.useRef([])
 
+  // ============================
+  // FIX: HANDLE MULTI-LINE PASTE
+  // ============================
+  const handleEmailPaste = (e) => {
+    const paste = e.clipboardData.getData("text");
+
+    if (paste.includes("\n")) {
+      e.preventDefault();
+      const [pastedEmail, pastedPassword] = paste.split("\n");
+
+      setFormData(prev => ({
+        ...prev,
+        email: pastedEmail.trim(),
+        password: pastedPassword?.trim() || prev.password
+      }));
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
@@ -347,19 +365,11 @@ const Login = ({ onClose, onSwitchToSignUp }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onPaste={handleEmailPaste}
                 placeholder="Enter your email address"
-                required  style={{marginBottom:'10px'}}
-              />
-               {/* <label htmlFor="phone">Phone Number</label>
-              <input
-                type="number"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="Enter your phone number"
                 required
-              /> */}
+                style={{marginBottom:'10px'}}
+              />
             </div>
 
             <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
@@ -425,20 +435,11 @@ const Login = ({ onClose, onSwitchToSignUp }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onPaste={handleEmailPaste}
                 placeholder="Enter your email address"
-                required  style={{marginBottom:'10px'}}
-              />
-              {/* <label htmlFor="phone">Phone Number</label>
-              <input
-                type="number"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="Enter your phone number"
                 required
-              /> */}
-
+                style={{marginBottom:'10px'}}
+              />
             </div>
 
             {loginMethod === 'password' && (

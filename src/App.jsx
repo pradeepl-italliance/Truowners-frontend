@@ -1,11 +1,12 @@
-import React from 'react'
+
+import React, { Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { AdminAuthProvider } from './context/AdminAuthContext'
 import Layout from './components/common/Layout/Layout'
 import ErrorBoundary from './components/common/ErrorBoundary'
-import HomePage from './components/pages/Home/HomePage'
-import NewHomePage from './components/pages/Home/NewHomePage'
+const HomePage = lazy(() => import('./components/pages/Home/HomePage'))
+const NewHomePage = lazy(() => import('./components/pages/Home/NewHomePage'))
 import OwnerDashboard from './components/pages/Owner/OwnerDashboard'
 import AdminDashboard from './components/pages/Admin/AdminDashboard'
 import SecretAdminAccess from './components/pages/Admin/SecretAdminAccess'
@@ -47,8 +48,10 @@ function AppContent() {
   return (
     <Layout>
       <ErrorBoundary>
+         <Suspense fallback={null}>
         <NewHomePage />
         <HomePage />
+        </Suspense>
       </ErrorBoundary>
     </Layout>
   )

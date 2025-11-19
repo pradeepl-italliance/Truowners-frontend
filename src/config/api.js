@@ -11,9 +11,9 @@ export const API_CONFIG = {
     LOGIN_PASSWORD: '/auth/login/password',
 
     // Forgot password flow
-    FORGOT_PASSWORD: '/auth/forgot-password',   // Send OTP for password reset
-    RESET_PASSWORD: '/auth/reset-password',     // Verify OTP & set new password
-    RESEND_OTP: '/auth/resend-otp'               // Optional: separate resend OTP route if available
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
+    RESEND_OTP: '/auth/resend-otp'
   },
   
   // Owner endpoints
@@ -21,14 +21,15 @@ export const API_CONFIG = {
     PROPERTIES: '/owner/properties'
   },
 
+  // Admin endpoints
   ADMIN: {
     USERS: '/admin/users',
     PROPERTIES: '/admin/properties',
     REVIEW_PROPERTY: '/admin/properties/:id/review',
     PUBLISH_PROPERTY: '/admin/properties/:id',
-    BOOKINGS: '/booking/all',                    
-    BOOKING_ANALYTICS: '/booking/analytics',     
-    UPDATE_BOOKING: '/booking/:id/status'        
+    BOOKINGS: '/booking/all',
+    BOOKING_ANALYTICS: '/booking/analytics',
+    UPDATE_BOOKING: '/booking/:id/status'
   },
 
   // User endpoints
@@ -39,6 +40,16 @@ export const API_CONFIG = {
     CONTACTOWNER: '/user/unlock-contact',
     BOOKING_ADD: '/booking',
     BOOKING_UPDATE: '/booking/:id/update-time',
+  },
+
+
+  SUBSCRIPTION: {
+    BASE: '/subscriptions',                           // localhost:5000/api/subscriptions
+    CREATE_FOR_USER: '/user-subscriptions/subscribe', // POST create subscription
+    ALL_SUBSCRIPTIONS: '/user-subscriptions',         // GET all subscriptions
+    ACTIVE_FOR_USER: '/user-subscriptions/active/',   // GET active subscription by user → /active/:user_id
+    UPGRADE: '/user-subscriptions/',                  // PUT upgrade → /:userSubscriptionId/upgrade
+    GET_BY_ID: '/user-subscriptions/',                // GET → /user-subscriptions/<userSubscriptionId>
   }
 }
 

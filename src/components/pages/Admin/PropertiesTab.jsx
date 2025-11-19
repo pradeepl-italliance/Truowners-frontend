@@ -489,7 +489,7 @@ const handlePostPropertySubmit = async () => {
 <Dialog
   open={postPropertyOpen}
   onClose={() => setPostPropertyOpen(false)}
-  maxWidth="sm" // reduced width
+  maxWidth="sm"
   fullWidth
   PaperProps={{ sx: { borderRadius: 2, p: 0, boxShadow: 'none' } }}
 >
@@ -504,7 +504,7 @@ const handlePostPropertySubmit = async () => {
   </Box>
 
   <DialogContent dividers sx={{ maxHeight: '75vh', overflowY: 'auto', px: 3, py: 3 }}>
-    
+
     {/* Basic Information Section */}
     <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
       <Typography variant="h6" fontWeight={700} mb={2}>
@@ -533,6 +533,68 @@ const handlePostPropertySubmit = async () => {
         />
       </Stack>
     </Paper>
+
+    {/* 🌟 UPDATED — Owner Details Section */}
+<Paper 
+  sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} 
+  elevation={0}
+>
+  <Typography variant="h6" fontWeight={700} mb={2}>
+    Owner Details
+  </Typography>
+
+  <Grid container spacing={2}>
+
+    {/* Name */}
+    <Grid item xs={12}>
+      <TextField
+        fullWidth
+        label="Name"
+        placeholder="Enter name"
+        value={newPropertyData.owner?.name || ""}
+        onChange={(e) =>
+          setNewPropertyData({
+            ...newPropertyData,
+            owner: { ...newPropertyData.owner, name: e.target.value }
+          })
+        }
+      />
+    </Grid>
+
+    {/* Phone Number */}
+    <Grid item xs={12}>
+      <TextField
+        fullWidth
+        label="Phone Number"
+        placeholder="Enter phone number"
+        value={newPropertyData.owner?.phone || ""}
+        onChange={(e) =>
+          setNewPropertyData({
+            ...newPropertyData,
+            owner: { ...newPropertyData.owner, phone: e.target.value }
+          })
+        }
+      />
+    </Grid>
+
+    {/* Email ID */}
+    <Grid item xs={12}>
+      <TextField
+        fullWidth
+        label="Email ID"
+        placeholder="Enter email"
+        value={newPropertyData.owner?.email || ""}
+        onChange={(e) =>
+          setNewPropertyData({
+            ...newPropertyData,
+            owner: { ...newPropertyData.owner, email: e.target.value }
+          })
+        }
+      />
+    </Grid>
+
+  </Grid>
+</Paper>
 
     {/* Location Section */}
     <Paper sx={{ p: 3, mb: 3, borderRadius: 2, backgroundColor: '#fff', boxShadow: 'none' }} elevation={0}>
@@ -790,19 +852,19 @@ const handlePostPropertySubmit = async () => {
       disabled={uploading || !newPropertyData.title || newPropertyData.mediaFiles?.length === 0}
       sx={{
         backgroundColor: '#1976d2',
-        color: '#fff', // text is white
-        px: 8, // more horizontal padding
+        color: '#fff',
+        px: 8,
         py: 1.5,
         fontWeight: 600,
-        minWidth: 200, // minimum width for the button
+        minWidth: 200,
         '&:hover': { 
           backgroundColor: '#115293', 
           color: '#fff' 
         },
         '&.Mui-disabled': {
-          backgroundColor: '#1976d2', // keep background blue even when disabled
-          color: '#fff', // keep text white when disabled
-          opacity: 1, // remove faded look for disabled button
+          backgroundColor: '#1976d2',
+          color: '#fff',
+          opacity: 1,
         },
       }}
     >
@@ -810,7 +872,6 @@ const handlePostPropertySubmit = async () => {
     </Button>
   </DialogActions>
 </Dialog>
-
 
 
 
